@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "build": "tsc",
-    "dev": "npx nodemon ./src/main.js"
+    "server:dev": "npx nodemon ./src/main.js",
+    "client:dev": "cd client && npx vite build --watch"
   },
   "repository": {
     "type": "git",
