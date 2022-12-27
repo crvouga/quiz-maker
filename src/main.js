@@ -4,6 +4,8 @@ const routes = require("./routes");
 const monogodb = require("./mongodb");
 const lti = require("ltijs").Provider;
 
+const clientAppDistPath = path.join(__dirname, "../client/dist");
+
 // Setup
 lti.setup(
   process.env["LTI_KEY"],
@@ -12,7 +14,7 @@ lti.setup(
     connection: { user: monogodb.MONGOUSER, pass: monogodb.MONGOPASSWORD },
   },
   {
-    staticPath: path.join(__dirname, "./public"), // Path to static files
+    staticPath: clientAppDistPath, // Path to static files
     cookies: {
       secure: false, // Set secure to true if the testing platform is in a different domain and https is being used
       sameSite: "", // Set sameSite to 'None' if the testing platform is in a different domain and https is being used
@@ -23,15 +25,14 @@ lti.setup(
 
 // When receiving successful LTI launch redirects to app
 lti.onConnect(async (token, req, res) => {
-  console.log("connected");
-  console.log(token);
-  res.sendFile(path.join(__dirname, "../public/index.html"));
+  res.sendFile(path.join(clientAppDistPath, "/index.html"));
   return;
 });
 
 // When receiving deep linking request redirects to deep screen
 lti.onDeepLinking(async (token, req, res) => {
-  return lti.redirect(res, "/deeplink", { newResource: true });
+  lti.redirect(res, "/deeplink", { newResource: true });
+  return;
 });
 
 // Setting up routes

@@ -55,7 +55,8 @@ router.post("/grade", async (req, res) => {
 // Names and Roles route
 router.get("/members", async (req, res) => {
   try {
-    const result = await lti.NamesAndRoles.getMembers(res.locals.token);
+    const token = res.locals.token;
+    const result = await lti.NamesAndRoles.getMembers(token);
     if (result) return res.send(result.members);
     return res.sendStatus(500);
   } catch (err) {
