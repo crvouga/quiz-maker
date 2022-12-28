@@ -1,37 +1,41 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
-import { LTI, LTIMember } from "./LTI";
+import { computed, onMounted, ref } from "vue";
+import AppInstructor from "./App.Instructor.vue";
+import AppStudent from "./App.Student.vue";
+import { LTI, LTIInfo, LTIMember } from "./LTI";
 
 const members = ref<LTIMember[]>([]);
-
 onMounted(async () => {
-  console.log("mounted");
   const got = await LTI.getMembers();
-
   if (got[0] === "ok") {
     members.value = got[1];
+  }
+});
+
+const info = ref<LTIInfo>();
+const role = computed(() => {
+  if (info.value) {
+    return LTI.toRole(info.value);
+  }
+  return null;
+});
+
+onMounted(async () => {
+  const got = await LTI.getInfo();
+  if (got[0] === "ok") {
+    info.value = got[1];
   }
 });
 </script>
 
 <template>
-  <!-- <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
+  <div
+    class="w-screen h-screen flex items-center justify-center font-bold"
+    v-if="!info">
+    Loading...
   </div>
-  <HelloWorld msg="COol" /> -->
-  <h1 class="text-3xl font-bold underline">Hello world!</h1>
-
-  <pre class="text-left">
-    {{ JSON.stringify(members, null, 2) }}
-  </pre>
-
-  <button class="btn">Click me</button>
+  <AppInstructor v-else-if="role === 'Instructor'" :info="info" />
+  <AppStudent v-else-if="role === 'Student'" :info="info" />
 </template>
 
 <!-- <style scoped>
