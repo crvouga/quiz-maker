@@ -35,17 +35,17 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 const posting = ref(false);
 const post = async () => {
   if (!correctAnswerId.value) {
-    console.log("no correct answer");
+    console.error("missing correct answer");
     return;
   }
 
   if (answers.value.length === 0) {
-    console.log("no answers");
+    console.error("missing answers");
     return;
   }
 
   if (questionTitle.value.length === 0) {
-    console.log("no question title");
+    console.error("missing question title");
     return;
   }
 

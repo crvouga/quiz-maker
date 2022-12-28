@@ -19,7 +19,6 @@ const [screen, pushScreen] = useHistoryState<Screen>(
   (x): x is Screen =>
     typeof x === "string" && (x === "add" || x === "create-new")
 );
-
 //
 //
 //

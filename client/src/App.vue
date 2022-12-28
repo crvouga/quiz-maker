@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from "vue";
 import AppInstructor from "./App.Instructor.vue";
 import AppStudent from "./App.Student.vue";
+import { AppMode } from "./app-mode";
 import { LTI, LTIInfo, LTIMember } from "./LTI";
 
 const members = ref<LTIMember[]>([]);
@@ -21,29 +22,41 @@ const role = computed(() => {
 });
 
 onMounted(async () => {
-  console.log("getting info");
   const got = await LTI.getInfo();
-  console.log("got info", { got });
+
   if (got[0] === "ok") {
     info.value = got[1];
   }
 });
 
-console.log("HELLO");
+//
+//
+//
+
+const appMode = ref<AppMode>("default");
+
 onMounted(() => {
-  console.log(info.value);
-});
-watch(info, (info) => {
-  console.log(info);
+  if (window.location.pathname === "/deeplink") {
+    appMode.value = "deepLinking";
+    return;
+  }
+  appMode.value = "default";
+  return;
 });
 </script>
 
 <template>
+  <pre>
+    {{ info }}
+  </pre>
   <div
     class="w-screen h-screen flex items-center justify-center font-bold"
     v-if="!info">
     Loading...
   </div>
-  <AppInstructor v-else-if="role === 'Instructor'" :info="info" />
+  <AppInstructor
+    v-else-if="role === 'Instructor'"
+    :appMode="appMode"
+    :info="info" />
   <AppStudent v-else-if="role === 'Student'" :info="info" />
 </template>

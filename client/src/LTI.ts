@@ -87,7 +87,6 @@ export const getInfo = async (): Promise<Result<string, Info>> => {
     const parsed = Info.safeParse(data);
 
     if (!parsed.success) {
-      console.log({ error: parsed.error, data });
       return ["err", "Failed to parse response"];
     }
 

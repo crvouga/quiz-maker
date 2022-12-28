@@ -27,6 +27,7 @@ ltijs.setup(
 // When receiving successful LTI launch redirects to app
 ltijs.onConnect(async (token, req, res) => {
   res.sendFile(path.join(clientAppDistPath, "/index.html"));
+  console.log("onConnect");
   return;
 });
 
@@ -34,18 +35,19 @@ ltijs.onConnect(async (token, req, res) => {
 ltijs.onDeepLinking((token, req, res) => {
   // Call redirect function to deep linking view
   ltijs.redirect(res, "/deeplink");
+  return;
 });
 
 // Deep Linking route, displays the resource selection view
 ltijs.app.get("/deeplink", async (req, res) => {
-  res.sendFile(path.join(clientAppDistPath, "/index.html"));
   console.log("Deep Linking");
+  res.sendFile(path.join(clientAppDistPath, "/index.html"));
   return;
 });
 
 // Setting up routes
-ltijs.app.use(lti.router);
 ltijs.app.use(quiz.router);
+ltijs.app.use(lti.router);
 
 // Setup function
 const setup = async () => {

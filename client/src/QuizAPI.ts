@@ -28,6 +28,47 @@ const Quiz = z.object({
 export type Quiz = z.infer<typeof Quiz>;
 
 export const QuizAPI = {
+  async deepLink(quiz: Quiz): Promise<Result<string, null>> {
+    try {
+      const response = await fetch("/quiz/deep-link", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: LTI.getAuthorizationHeader(),
+        },
+        body: JSON.stringify(quiz),
+      });
+
+      const json = await response.json();
+
+      const parsed = z
+        .object({
+          deepLinkingFormHTML: z.string(),
+        })
+        .safeParse(json);
+
+      if (!parsed.success) {
+        return ["err", String(parsed.error)];
+      }
+
+      const { deepLinkingFormHTML } = parsed.data;
+
+      document.body.insertAdjacentHTML("beforeend", deepLinkingFormHTML);
+      const form = document.getElementById("ltijs_submit");
+
+      if (!form) {
+        return ["err", "form not found"];
+      }
+
+      // @ts-ignore
+      form.submit();
+
+      return ["ok", null];
+    } catch (error) {
+      return ["err", String(error)];
+    }
+  },
+
   async post(quiz: Quiz): Promise<Result<string, null>> {
     try {
       await fetch("/quiz", {

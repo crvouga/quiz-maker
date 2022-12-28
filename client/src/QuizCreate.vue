@@ -24,6 +24,7 @@ const [screen, pushScreen] = useHistoryState<Screen>(
 //
 //
 
+const title = ref("");
 const selected = ref<Question[]>([]);
 
 const postStatus = ref<"idle" | "loading" | "error">("idle");
@@ -32,10 +33,20 @@ const postQuiz = async () => {
     return;
   }
 
+  if (title.value.length === 0) {
+    console.log("missing quiz title");
+    return;
+  }
+
+  if (selected.value.length === 0) {
+    console.log("missing questions");
+    return;
+  }
+
   postStatus.value = "loading";
   const quiz: Quiz = {
     id: Id.generate(),
-    title: "test",
+    title: title.value,
     questions: selected.value,
   };
   const result = await QuizAPI.post(quiz);
@@ -75,6 +86,7 @@ const onRemove = (question: Question) => {
       </label>
 
       <input
+        v-model="title"
         type="text"
         placeholder="My quiz"
         class="w-full input input-primary input-bordered" />

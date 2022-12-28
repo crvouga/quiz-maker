@@ -19,5 +19,6 @@ export const useHistoryState = <T>(
       state.value = historyState[key];
     }
   });
+
   return [state, push] as const;
 };
