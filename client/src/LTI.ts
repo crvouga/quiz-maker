@@ -1,6 +1,5 @@
 import { z } from "zod";
-
-type Result<TErr, TData> = ["ok", TData] | ["err", TErr];
+import { Result } from "./Result";
 
 const getLTIK = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -125,4 +124,5 @@ export const LTI = {
   getMembers,
   getInfo,
   toRole,
+  getAuthorizationHeader,
 };

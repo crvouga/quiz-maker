@@ -1,6 +1,7 @@
 require("dotenv").config();
 const path = require("path");
 const routes = require("./routes");
+const quiz = require("./quiz");
 const monogodb = require("./mongodb");
 const lti = require("ltijs").Provider;
 
@@ -37,6 +38,7 @@ lti.onDeepLinking(async (token, req, res) => {
 
 // Setting up routes
 lti.app.use(routes);
+lti.app.use(quiz.router);
 
 // Setup function
 const setup = async () => {

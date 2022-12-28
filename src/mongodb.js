@@ -1,4 +1,5 @@
 require("dotenv").config();
+const { MongoClient } = require("mongodb");
 
 const MONGOHOST = process.env["MONGOHOST"];
 const MONGOPASSWORD = process.env["MONGOPASSWORD"];
@@ -11,10 +12,15 @@ if (!(MONGOHOST && MONGOPASSWORD && MONGOPORT && MONGOUSER)) {
 
 const url = `mongodb://${MONGOUSER}:${MONGOPASSWORD}@${MONGOHOST}:${MONGOPORT}`;
 
+const client = new MongoClient(url);
+
+const db = client.db("learning-tool");
+
 module.exports = {
   MONGOHOST,
   MONGOPASSWORD,
   MONGOPORT,
   MONGOUSER,
   url,
+  db,
 };
