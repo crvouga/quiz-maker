@@ -21,7 +21,6 @@ const getAuthorizationHeader = () => {
 //
 
 const Member = z.object({
-  lis_person_sourcedid: z.string(),
   roles: z.array(z.string()),
   user_id: z.string(),
 });

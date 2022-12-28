@@ -1,11 +1,11 @@
 const express = require("express");
-const mongodb = require("./mongodb");
+const mongo = require("./mongo");
 
 const router = express.Router();
 
-const col = mongodb.db.collection("quizzes");
+const col = mongo.db.collection("quizzes");
 
-const quizQuestions = mongodb.db.collection("quiz-questions");
+const quizQuestions = mongo.db.collection("quiz-questions");
 
 router.post("/quiz", async (req, res) => {
   console.log(req.body);
