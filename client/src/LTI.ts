@@ -64,8 +64,8 @@ const Info = z.object({
     title: z.string(),
     type: z.array(z.string()),
   }),
-  name: z.string(),
-  email: z.string(),
+  name: z.string().optional(),
+  email: z.string().optional(),
   roles: z.array(z.string()),
 });
 
@@ -87,6 +87,7 @@ export const getInfo = async (): Promise<Result<string, Info>> => {
     const parsed = Info.safeParse(data);
 
     if (!parsed.success) {
+      console.log({ error: parsed.error, data });
       return ["err", "Failed to parse response"];
     }
 

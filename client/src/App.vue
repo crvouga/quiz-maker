@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import AppInstructor from "./App.Instructor.vue";
 import AppStudent from "./App.Student.vue";
 import { LTI, LTIInfo, LTIMember } from "./LTI";
@@ -21,10 +21,20 @@ const role = computed(() => {
 });
 
 onMounted(async () => {
+  console.log("getting info");
   const got = await LTI.getInfo();
+  console.log("got info", { got });
   if (got[0] === "ok") {
     info.value = got[1];
   }
+});
+
+console.log("HELLO");
+onMounted(() => {
+  console.log(info.value);
+});
+watch(info, (info) => {
+  console.log(info);
 });
 </script>
 

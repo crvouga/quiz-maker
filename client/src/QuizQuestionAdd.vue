@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { LTIInfo } from "./LTI";
-import { Question, Quiz } from "./Quiz";
+import { Question, QuizAPI } from "./QuizAPI";
 import QuizQuestionCreate from "./QuizQuestionCreate.vue";
 import { useHistoryState } from "./useHistoryState";
 
@@ -31,7 +31,7 @@ const searchHits = ref<Question[]>([]);
 
 const searchQuestions = async ({ query }: { query: string }) => {
   searchStatus.value = "loading";
-  const result = await Quiz.Question.search({ query: "" });
+  const result = await QuizAPI.Question.search({ query: "" });
 
   if (result[0] === "err") {
     searchStatus.value = "error";
@@ -60,7 +60,9 @@ const onCreated = (question: Question) => {
 const deleteQuestion = async (question: Question) => {
   const prev = searchHits.value;
   searchHits.value = searchHits.value.filter((x) => x.id !== question.id);
-  const result = await Quiz.Question.deleteForever({ questionId: question.id });
+  const result = await QuizAPI.Question.deleteForever({
+    questionId: question.id,
+  });
   if (result[0] === "err") {
     searchHits.value = prev;
     return;

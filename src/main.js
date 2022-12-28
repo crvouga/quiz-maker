@@ -31,8 +31,15 @@ ltijs.onConnect(async (token, req, res) => {
 });
 
 // When receiving deep linking request redirects to deep screen
-ltijs.onDeepLinking(async (token, req, res) => {
-  ltijs.redirect(res, "/deeplink", { newResource: true });
+ltijs.onDeepLinking((token, req, res) => {
+  // Call redirect function to deep linking view
+  ltijs.redirect(res, "/deeplink");
+});
+
+// Deep Linking route, displays the resource selection view
+ltijs.app.get("/deeplink", async (req, res) => {
+  res.sendFile(path.join(clientAppDistPath, "/index.html"));
+  console.log("Deep Linking");
   return;
 });
 

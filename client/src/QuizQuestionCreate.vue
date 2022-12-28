@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { Id } from "./Id";
 import { LTIInfo } from "./LTI";
-import { Answer, Question, Quiz } from "./Quiz";
+import { Answer, Question, QuizAPI } from "./QuizAPI";
 
 defineProps<{ info: LTIInfo }>();
 
@@ -57,7 +57,7 @@ const post = async () => {
   };
 
   posting.value = true;
-  await Quiz.Question.post(question);
+  await QuizAPI.Question.post(question);
   posting.value = false;
 
   emit("created", question);

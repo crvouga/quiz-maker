@@ -1,19 +1,28 @@
 const express = require("express");
 const mongo = require("./mongo");
-
+const lti = require("ltijs").Provider;
 const router = express.Router();
 
 const quizCol = mongo.db.collection("quizzes");
 const questionCol = mongo.db.collection("quiz-questions");
 
 router.post("/quiz", async (req, res) => {
-  console.log(req.body);
+  const idtoken = res.locals.token;
+  const quizNew = req.body;
+
+  const lineItem = {
+    scoreMaximum: quizNew.questions.length,
+    label: quizNew.title,
+    tag: "quiz",
+  };
+  await lti.Grade.createLineItem(res.locals.token, lineItem);
   await quizCol.insertOne(req.body);
-  res.status(201).send({ message: "Quiz created" }).end();
+  return res.status(201).send({ message: "Quiz created" }).end();
 });
 
 router.post("/quiz-question", async (req, res) => {
   console.log(req.body);
+
   await questionCol.createIndex({ question: "text" });
   await questionCol.insertOne(req.body);
   res.status(201).send({ message: "Quiz question created" }).end();

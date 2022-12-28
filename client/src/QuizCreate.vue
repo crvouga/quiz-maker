@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { Id } from "./Id";
 import { LTIInfo } from "./LTI";
-import { Question, Quiz } from "./Quiz";
+import { Question, Quiz, QuizAPI } from "./QuizAPI";
 import QuizQuestionAdd from "./QuizQuestionAdd.vue";
 import { useHistoryState } from "./useHistoryState";
 
@@ -38,7 +38,7 @@ const postQuiz = async () => {
     title: "test",
     questions: selected.value,
   };
-  const result = await Quiz.post(quiz);
+  const result = await QuizAPI.post(quiz);
   if (result[0] === "err") {
     postStatus.value = "error";
     return;

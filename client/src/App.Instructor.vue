@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { ref } from "vue";
+
+import { Quiz, QuizAPI } from "./QuizAPI";
 import { LTIInfo } from "./LTI";
-import { Quiz } from "./Quiz";
 import QuizCreate from "./QuizCreate.vue";
 import { useHistoryState } from "./useHistoryState";
 
@@ -15,7 +17,28 @@ const [screen, pushScreen] = useHistoryState(
 );
 const onCreated = (quiz: Quiz) => {
   pushScreen("home");
-  console.log(quiz);
+};
+
+//
+//
+//
+//
+//
+
+const quizzes = ref<Quiz[]>([]);
+const fetchStatus = ref<"idle" | "loading" | "error">("idle");
+const fetchQuizzes = async () => {
+  fetchStatus.value = "loading";
+  const found = await QuizAPI.findMany();
+  if (found[0] === "err") {
+    fetchStatus.value = "error";
+    return;
+  }
+  fetchStatus.value = "idle";
+  quizzes.value = found[1];
+
+  fetchStatus.value = "idle";
+  quizzes.value = found[1];
 };
 </script>
 
