@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { Result } from "./Result";
 import { LTI } from "./LTI";
 
@@ -7,17 +8,19 @@ export type Quiz = {
   questions: Question[];
 };
 
-export type Question = {
-  id: string;
-  question: string;
-  correctAnswerId: string;
-  answers: Answer[];
-};
+const Answer = z.object({
+  id: z.string(),
+  answer: z.string(),
+});
+export type Answer = z.infer<typeof Answer>;
 
-export type Answer = {
-  id: string;
-  answer: string;
-};
+const Question = z.object({
+  id: z.string(),
+  question: z.string(),
+  correctAnswerId: z.string(),
+  answers: z.array(Answer),
+});
+export type Question = z.infer<typeof Question>;
 
 const post = async (quiz: Quiz): Promise<Result<string, null>> => {
   try {
@@ -35,9 +38,43 @@ const post = async (quiz: Quiz): Promise<Result<string, null>> => {
   }
 };
 
+type SearchResult<T> = {
+  hits: T[];
+};
+
 export const Quiz = {
   post,
   Question: {
+    async search({
+      query,
+    }: {
+      query: string;
+    }): Promise<Result<string, SearchResult<Question>>> {
+      try {
+        const response = await fetch(`/quiz-question-search?query=${query}`, {
+          method: "POST",
+          headers: {
+            Authorization: LTI.getAuthorizationHeader(),
+          },
+        });
+
+        const data = await response.json();
+
+        const parsed = z
+          .object({
+            hits: z.array(Question),
+          })
+          .safeParse(data);
+
+        if (!parsed.success) {
+          return ["err", String(parsed.error)];
+        }
+        return ["ok", parsed.data];
+      } catch (error) {
+        return ["err", String(error)];
+      }
+    },
+
     async post(question: Question): Promise<Result<string, null>> {
       try {
         await fetch("/quiz-question", {
