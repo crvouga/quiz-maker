@@ -56,6 +56,16 @@ const onCreated = (question: Question) => {
   pushScreen("add");
   emit("added", question);
 };
+
+const deleteQuestion = async (question: Question) => {
+  const prev = searchHits.value;
+  searchHits.value = searchHits.value.filter((x) => x.id !== question.id);
+  const result = await Quiz.Question.deleteForever({ questionId: question.id });
+  if (result[0] === "err") {
+    searchHits.value = prev;
+    return;
+  }
+};
 </script>
 
 <template>
@@ -69,7 +79,7 @@ const onCreated = (question: Question) => {
     class="flex flex-col justify-center items-center p-4">
     <h1 class="font-bold text-2xl">Add Question</h1>
 
-    <div class="w-full form-control mt-4">
+    <div class="w-full form-control mt-4 mb-4">
       <label class="label">
         <span class="label-text">Search</span>
       </label>
@@ -80,7 +90,7 @@ const onCreated = (question: Question) => {
           type="text"
           placeholder="Search questions..."
           class="w-full input input-primary input-bordered" />
-        <button class="btn btn-secondary" @click="pushScreen('create-new')">
+        <button class="btn btn-primary" @click="pushScreen('create-new')">
           Create New
         </button>
       </label>
@@ -89,9 +99,15 @@ const onCreated = (question: Question) => {
     <div
       v-for="hit in searchHits"
       v-bind:key="hit.id"
-      class="p-2"
-      @click="emit('added', hit)">
-      {{ hit.question }}
+      class="flex items-center w-full">
+      <div
+        class="flex-1 p-3 font-bold text-lg cursor-pointer"
+        @click="emit('added', hit)">
+        {{ hit.question }}
+      </div>
+      <button @click="deleteQuestion(hit)" class="btn btn-xs mr-1">
+        Delete Forever
+      </button>
     </div>
   </div>
 </template>

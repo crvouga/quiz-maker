@@ -19,6 +19,12 @@ router.post("/quiz-question", async (req, res) => {
   res.status(201).send({ message: "Quiz question created" }).end();
 });
 
+router.delete("/quiz-question/:id", async (req, res) => {
+  const questionId = req.params.id;
+  await questionCol.deleteOne({ id: questionId });
+  res.status(201).send({ message: "Quiz question created" }).end();
+});
+
 router.post("/quiz-question-search", async (req, res) => {
   const searchQuery = req.query.query;
   console.log(req.query);

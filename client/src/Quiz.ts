@@ -75,6 +75,24 @@ export const Quiz = {
       }
     },
 
+    async deleteForever({
+      questionId,
+    }: {
+      questionId: string;
+    }): Promise<Result<string, null>> {
+      try {
+        await fetch(`/quiz-question/${questionId}`, {
+          method: "DELETE",
+          headers: {
+            Authorization: LTI.getAuthorizationHeader(),
+          },
+        });
+        return ["ok", null];
+      } catch (error) {
+        return ["err", String(error)];
+      }
+    },
+
     async post(question: Question): Promise<Result<string, null>> {
       try {
         await fetch("/quiz-question", {

@@ -8,6 +8,10 @@ import { useHistoryState } from "./useHistoryState";
 
 defineProps<{ info: LTIInfo }>();
 
+const emit = defineEmits<{
+  (e: "created", quiz: Quiz): void;
+}>();
+
 type Screen = "add" | "create";
 const [screen, pushScreen] = useHistoryState<Screen>(
   "quizCreateScreen",
@@ -22,12 +26,25 @@ const [screen, pushScreen] = useHistoryState<Screen>(
 
 const selected = ref<Question[]>([]);
 
+const postStatus = ref<"idle" | "loading" | "error">("idle");
 const postQuiz = async () => {
-  await Quiz.post({
+  if (postStatus.value === "loading") {
+    return;
+  }
+
+  postStatus.value = "loading";
+  const quiz: Quiz = {
     id: Id.generate(),
     title: "test",
-    questions: [],
-  });
+    questions: selected.value,
+  };
+  const result = await Quiz.post(quiz);
+  if (result[0] === "err") {
+    postStatus.value = "error";
+    return;
+  }
+  postStatus.value = "idle";
+  emit("created", quiz);
 };
 
 const onAdd = (question: Question) => {
@@ -90,7 +107,16 @@ const onRemove = (question: Question) => {
       </li>
     </ol>
 
-    <button @click="postQuiz" class="mt-6 w-full btn btn-primary">
+    <!-- 
+
+
+
+     -->
+
+    <button
+      @click="postQuiz"
+      class="mt-6 w-full btn btn-primary"
+      :class="{ loading: postStatus === 'loading' }">
       Create New Quiz
     </button>
   </div>
