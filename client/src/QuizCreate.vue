@@ -15,7 +15,7 @@ const postQuiz = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col justify-center">
+  <div class="flex flex-col justify-center items-center p-4">
     <h1 class="font-bold text-2xl">Create New Quiz</h1>
 
     <!-- 
@@ -27,29 +27,31 @@ const postQuiz = async () => {
       <label class="label">
         <span class="label-text">Quiz Title</span>
       </label>
-      <label class="input-group">
-        <input
-          type="text"
-          placeholder="My quiz"
-          class="input input-primary input-bordered" />
-      </label>
+
+      <input
+        type="text"
+        placeholder="My quiz"
+        class="w-full input input-primary input-bordered" />
     </div>
 
     <!-- 
 
-    Title
+    Questions
 
    -->
-    <div class="form-control">
+    <a class="mt-4 btn btn-primary" href="#/quiz-question-create">
+      Create Question
+    </a>
+
+    <div class="form-control mt-4">
       <label class="label">
         <span class="label-text">Quiz Questions</span>
       </label>
-      <label class="input-group">
-        <input
-          type="text"
-          placeholder="Question"
-          class="input input-primary input-bordered" />
-      </label>
+
+      <input
+        type="text"
+        placeholder="Question"
+        class="w-full input input-primary input-bordered" />
     </div>
 
     <!-- 
