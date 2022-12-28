@@ -3,27 +3,26 @@ const mongo = require("./mongo");
 
 const router = express.Router();
 
-const col = mongo.db.collection("quizzes");
-
-const quizQuestions = mongo.db.collection("quiz-questions");
+const quizCol = mongo.db.collection("quizzes");
+const questionCol = mongo.db.collection("quiz-questions");
 
 router.post("/quiz", async (req, res) => {
   console.log(req.body);
-  col.insertOne(req.body);
+  await quizCol.insertOne(req.body);
   res.status(201).send({ message: "Quiz created" }).end();
 });
 
 router.post("/quiz-question", async (req, res) => {
   console.log(req.body);
-  await quizQuestions.createIndex({ question: "text" });
-  await quizQuestions.insertOne(req.body);
+  await questionCol.createIndex({ question: "text" });
+  await questionCol.insertOne(req.body);
   res.status(201).send({ message: "Quiz question created" }).end();
 });
 
 router.post("/quiz-question-search", async (req, res) => {
   const searchQuery = req.query.query;
   console.log(req.query);
-  const found = quizQuestions.find({});
+  const found = questionCol.find({});
   const hits = await found.toArray();
   console.log(hits);
   res.status(200).send({ hits: hits }).end();

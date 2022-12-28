@@ -6,6 +6,10 @@ import { Answer, Question, Quiz } from "./Quiz";
 
 defineProps<{ info: LTIInfo }>();
 
+const emit = defineEmits<{
+  (e: "created", question: Question): void;
+}>();
+
 const questionTitle = ref<string>("");
 
 const correctAnswerId = ref<string | null>(null);
@@ -55,6 +59,8 @@ const post = async () => {
   posting.value = true;
   await Quiz.Question.post(question);
   posting.value = false;
+
+  emit("created", question);
 };
 </script>
 

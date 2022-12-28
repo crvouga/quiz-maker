@@ -9,11 +9,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "daisyui": "^2.46.0",
     "vue": "^3.2.45",
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "daisyui": "^2.46.0",
     "@vitejs/plugin-vue": "^4.0.0",
     "autoprefixer": "^10.4.13",
     "postcss": "^8.4.20",
