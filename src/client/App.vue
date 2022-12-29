@@ -12,6 +12,7 @@ onMounted(async () => {
 
   if (got[0] === "ok") {
     context.value = got[1];
+    console.log("context", got[1]);
     return;
   }
 });

@@ -1,14 +1,43 @@
 import { z } from "zod";
-import { Question, Quiz } from "../quiz";
+import { AnswersByQuestionId, Question, Quiz, QuizSubmission } from "../quiz";
 import { Result } from "../utils";
 import { API_LMS } from "./API_LMS";
 
 export const API_Quiz = {
-  //
-  //
-  // Select a quiz from the LMS assignment
-  //
-  //
+  /* 
+  
+  
+  
+  
+  
+  */
+
+  QuizSubmission: {
+    async post(quizSubmission: QuizSubmission): Promise<Result<string, null>> {
+      try {
+        await fetch("/quiz-submission", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: API_LMS.getAuthorizationHeader(),
+          },
+          body: JSON.stringify(quizSubmission),
+        });
+
+        return ["ok", null];
+      } catch (error) {
+        return ["err", String(error)];
+      }
+    },
+  },
+
+  /* 
+  
+  
+
+  
+  
+  */
   async deepLink(quiz: Quiz): Promise<Result<string, null>> {
     try {
       const response = await fetch("/quiz/deep-link", {

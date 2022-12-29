@@ -29,3 +29,17 @@ export const Quiz = z.object({
 });
 
 export type Quiz = z.infer<typeof Quiz>;
+
+export const AnswersByQuestionId = z.record(
+  z.object({
+    questionId: z.string(),
+    choiceId: z.string(),
+  })
+);
+export type AnswersByQuestionId = z.infer<typeof AnswersByQuestionId>;
+
+export const QuizSubmission = z.object({
+  quiz: Quiz,
+  answersByQuestionId: AnswersByQuestionId,
+});
+export type QuizSubmission = z.infer<typeof QuizSubmission>;

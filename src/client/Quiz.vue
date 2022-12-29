@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Quiz } from "../quiz";
+import { AnswersByQuestionId, Quiz } from "../quiz";
+import { API_Quiz } from "./API_Quiz";
 
-defineProps<{
+const { quiz } = defineProps<{
   quiz: Quiz;
 }>();
 
-const selectedChoiceIds = ref<{ [questionId: string]: { choiceId: string } }>(
-  {}
-);
+const answersByQuestionId = ref<AnswersByQuestionId>({});
 
 const isSelected = ({
   questionId,
@@ -17,7 +16,7 @@ const isSelected = ({
   questionId: string;
   choiceId: string;
 }) => {
-  return selectedChoiceIds.value[questionId]?.choiceId === choiceId;
+  return answersByQuestionId.value[questionId]?.choiceId === choiceId;
 };
 
 const select = ({
@@ -27,13 +26,16 @@ const select = ({
   questionId: string;
   choiceId: string;
 }) => {
-  selectedChoiceIds.value[questionId] = { choiceId };
+  answersByQuestionId.value[questionId] = { questionId, choiceId };
 };
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 
-const onSubmit = () => {
-  console.log(selectedChoiceIds.value);
+const onSubmit = async () => {
+  await API_Quiz.QuizSubmission.post({
+    answersByQuestionId: answersByQuestionId.value,
+    quiz,
+  });
 };
 </script>
 

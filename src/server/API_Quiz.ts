@@ -1,5 +1,6 @@
 import express from "express";
-import { Question, Quiz } from "../quiz";
+import { z } from "zod";
+import { AnswersByQuestionId, Question, Quiz, QuizSubmission } from "../quiz";
 import { questions, quizzes } from "../quiz.sample-data";
 import { db, lti } from "./shared";
 
@@ -17,9 +18,11 @@ export const useAPI_Quiz = async (app: express.Application) => {
   */
 
   app.post("/quiz", async (req, res) => {
+    console.log("POST /quiz", req.body);
     const parsed = Quiz.safeParse(req.body);
 
     if (!parsed.success) {
+      console.log("failed to parse quiz");
       res.status(400).send({ message: "Invalid quiz" }).end();
       return;
     }
@@ -33,12 +36,42 @@ export const useAPI_Quiz = async (app: express.Application) => {
       tag: "quiz",
     };
 
+    console.log("creating quiz line item");
     // @ts-ignore
-    await lti.Grade.createLineItem(res.locals.token, lineItem);
+    const created = await lti.Grade.createLineItem(res.locals.token, lineItem);
+
+    console.log(created);
+
+    console.log("created so inserting quiz into db");
 
     await quizCol.insertOne(req.body);
 
+    console.log("done");
+
     return res.status(201).send({ message: "Quiz created" }).end();
+  });
+
+  /* 
+  
+  
+
+  
+  
+  */
+
+  app.post("/quiz-submission", async (req, res) => {
+    const parsed = QuizSubmission.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).send({ message: "Invalid body" }).end();
+      return;
+    }
+
+    const { quiz, answersByQuestionId } = parsed.data;
+
+    console.log("quiz", quiz);
+    console.log("answersByQuestionId", answersByQuestionId);
+    res.status(500).send({ message: "Not implemented" }).end();
   });
 
   /* 
