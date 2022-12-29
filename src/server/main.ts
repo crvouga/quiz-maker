@@ -3,7 +3,7 @@ import { useLMSRoutes } from "./routes.lms";
 import { useQuizRoutes } from "./routes.quiz";
 import { envVars, lti } from "./shared";
 
-const clientHtml = path.join(__dirname, "../../dist/index.html");
+const clientAppPath = path.join(__dirname, "../../dist/index.html");
 
 /* 
   
@@ -12,7 +12,7 @@ so we'll send the client html app that will run inside of the LMS
 
 */
 lti.onConnect((token, req, res) => {
-  return res.sendFile(clientHtml);
+  return res.sendFile(clientAppPath);
 });
 
 /* 
@@ -27,7 +27,7 @@ lti.onDeepLinking((token, req, res) => {
   return lti.redirect(res, "/deeplink");
 });
 lti.app.get("/deeplink", async (req, res) => {
-  return res.sendFile(clientHtml);
+  return res.sendFile(clientAppPath);
 });
 
 /* 
@@ -36,21 +36,29 @@ lti.app.get("/deeplink", async (req, res) => {
 
 
 */
+
 useQuizRoutes(lti.app);
 useLMSRoutes(lti.app);
 lti.app.get("*", (req, res) => {
-  res.sendFile(clientHtml);
+  res.sendFile(clientAppPath);
 });
 
 /* 
-
-
-This is where we run our app and register platforms like Moodle, Canvas, Blackboard, etc.
-
-
+  
+ 
+  
 */
-const setup = async () => {
+
+const main = async () => {
   await lti.deploy({ port: Number(envVars.PORT) });
+
+  /* 
+
+
+  This is where we hook up specific platforms like Moodle, Canvas, Blackboard, etc.
+
+
+  */
 
   await lti.registerPlatform({
     url: "http://localhost:8888/moodle",
@@ -65,4 +73,4 @@ const setup = async () => {
   });
 };
 
-setup();
+main();
