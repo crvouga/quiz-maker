@@ -9,6 +9,8 @@ import express from "express";
 
 Env Vars
 
+This is all the required env vars for the server to run
+
 
 */
 
@@ -66,6 +68,7 @@ export const envVars = {
 
 MongoDB Instance
 
+MongoDB is used as our primary database. It stores ltijs data and app specific data.
 
 */
 
@@ -89,7 +92,6 @@ export const db = client.db("learning-tool");
 Client Side App HTML
 
 
-
 */
 
 const clientAppHTML_Path = path.join(__dirname, "..", "..", "dist");
@@ -110,9 +112,9 @@ WARNING! The types provided by @types/ltijs do not match the actual ltijs librar
 
 */
 
-type LtiInstance = InstanceType<typeof ltijs.Provider>;
+type LTI_Instance = InstanceType<typeof ltijs.Provider>;
 
-export const lti: LtiInstance =
+export const lti: LTI_Instance =
   // @ts-ignore
   ltijs.Provider;
 
