@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Question, Quiz, QuizAPI } from "./QuizAPI";
+import { Question, Quiz, API_Quiz } from "./API_Quiz";
 import QuizQuestionAdd from "./QuizQuestionAdd.vue";
 import { Id, useHistoryState } from "./utils";
 
@@ -45,7 +45,7 @@ const postQuiz = async () => {
     title: title.value,
     questions: selected.value,
   };
-  const result = await QuizAPI.post(quiz);
+  const result = await API_Quiz.post(quiz);
   if (result[0] === "err") {
     postStatus.value = "error";
     return;

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import QuizVue from "./Quiz.vue";
-import { Quiz, QuizAPI } from "./QuizAPI";
+import { Quiz, API_Quiz } from "./API_Quiz";
 
 const props = defineProps<{
   quizId: string;
@@ -12,7 +12,7 @@ type QuizState = ["loading"] | ["err", string] | ["ok", Quiz];
 const state = ref<QuizState>(["loading"]);
 
 const fetchQuiz = async () => {
-  const found = await QuizAPI.findOne({ quizId: props.quizId });
+  const found = await API_Quiz.findOne({ quizId: props.quizId });
   state.value = found;
 };
 

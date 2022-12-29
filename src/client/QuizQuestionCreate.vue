@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Id } from "./utils";
-import { Answer, Question, QuizAPI } from "./QuizAPI";
+import { Answer, Question, API_Quiz } from "./API_Quiz";
 
 const emit = defineEmits<{
   (e: "created", question: Question): void;
@@ -54,7 +54,7 @@ const post = async () => {
   };
 
   posting.value = true;
-  await QuizAPI.Question.post(question);
+  await API_Quiz.Question.post(question);
   posting.value = false;
 
   emit("created", question);

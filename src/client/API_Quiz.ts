@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LTI } from "./LTI";
+import { API_LMS } from "./API_LMS";
 import { Result } from "./utils";
 
 const Answer = z.object({
@@ -27,7 +27,7 @@ const Quiz = z.object({
 });
 export type Quiz = z.infer<typeof Quiz>;
 
-export const QuizAPI = {
+export const API_Quiz = {
   //
   //
   // Select a quiz from the LMS assignment
@@ -39,7 +39,7 @@ export const QuizAPI = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: LTI.getAuthorizationHeader(),
+          Authorization: API_LMS.getAuthorizationHeader(),
         },
         body: JSON.stringify(quiz),
       });
@@ -80,7 +80,7 @@ export const QuizAPI = {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: LTI.getAuthorizationHeader(),
+          Authorization: API_LMS.getAuthorizationHeader(),
         },
         body: JSON.stringify(quiz),
       });
@@ -95,7 +95,7 @@ export const QuizAPI = {
       const response = await fetch(`/quiz/${quizId}`, {
         method: "GET",
         headers: {
-          Authorization: LTI.getAuthorizationHeader(),
+          Authorization: API_LMS.getAuthorizationHeader(),
         },
       });
 
@@ -117,7 +117,7 @@ export const QuizAPI = {
       const response = await fetch("/quiz", {
         method: "GET",
         headers: {
-          Authorization: LTI.getAuthorizationHeader(),
+          Authorization: API_LMS.getAuthorizationHeader(),
         },
       });
 
@@ -144,7 +144,7 @@ export const QuizAPI = {
         const response = await fetch(`/quiz-question-search?query=${query}`, {
           method: "POST",
           headers: {
-            Authorization: LTI.getAuthorizationHeader(),
+            Authorization: API_LMS.getAuthorizationHeader(),
           },
         });
 
@@ -174,7 +174,7 @@ export const QuizAPI = {
         await fetch(`/quiz-question/${questionId}`, {
           method: "DELETE",
           headers: {
-            Authorization: LTI.getAuthorizationHeader(),
+            Authorization: API_LMS.getAuthorizationHeader(),
           },
         });
         return ["ok", null];
@@ -189,7 +189,7 @@ export const QuizAPI = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: LTI.getAuthorizationHeader(),
+            Authorization: API_LMS.getAuthorizationHeader(),
           },
           body: JSON.stringify(question),
         });

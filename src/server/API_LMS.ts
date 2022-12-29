@@ -1,7 +1,7 @@
 import express from "express";
 import { lti } from "./shared";
 
-export const useLMSRoutes = (app: express.Application) => {
+export const useAPI_LMS = (app: express.Application) => {
   /* 
   
   

@@ -1,25 +1,24 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { LMS_Context, toRole } from "../lti";
 import AppInstructor from "./App.Instructor.vue";
 import AppStudent from "./App.Student.vue";
-import { LTI, LTIContext, LTILaunch } from "./LTI";
+import { API_LMS, LaunchMode } from "./API_LMS";
 
-const context = ref<LTIContext | null>(null);
+const context = ref<LMS_Context | null>(null);
 
 onMounted(async () => {
-  const got = await LTI.getContext();
+  const got = await API_LMS.getContext();
 
   if (got[0] === "ok") {
     context.value = got[1];
     return;
   }
-
-  console.error(got);
 });
 
-const launch = ref<LTILaunch>("Default");
+const launchMode = ref<LaunchMode>("Default");
 onMounted(() => {
-  launch.value = LTI.getLTILaunch();
+  launchMode.value = API_LMS.getLaunchMode();
 });
 </script>
 
@@ -30,12 +29,10 @@ onMounted(() => {
     Loading...
   </div>
   <AppInstructor
-    v-else-if="LTI.contextToRole(context) === 'Instructor'"
-    :launch="launch"
+    v-else-if="toRole(context) === 'Instructor'"
+    :launch-mode="launchMode"
     :context="context" />
-  <AppStudent
-    v-else-if="LTI.contextToRole(context) === 'Student'"
-    :context="context" />
+  <AppStudent v-else-if="toRole(context) === 'Student'" :context="context" />
 </template>
 
 <!-- tailwind boilerplate -->

@@ -1,6 +1,6 @@
 import path from "path";
-import { useLMSRoutes } from "./routes.lms";
-import { useQuizRoutes } from "./routes.quiz";
+import { useAPI_LMS } from "./API_LMS";
+import { useAPI_Quiz } from "./API_Quiz";
 import { envVars, lti } from "./shared";
 
 const clientAppPath = path.join(__dirname, "../../dist/index.html");
@@ -36,8 +36,8 @@ lti.app.get("/deeplink", async (req, res) => {
 
 */
 
-useQuizRoutes(lti.app);
-useLMSRoutes(lti.app);
+useAPI_Quiz(lti.app);
+useAPI_LMS(lti.app);
 lti.app.get("*", (_req, res) => {
   return res.sendFile(clientAppPath);
 });

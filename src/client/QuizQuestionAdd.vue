@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { Question, QuizAPI } from "./QuizAPI";
+import { Question, API_Quiz } from "./API_Quiz";
 import QuizQuestionCreate from "./QuizQuestionCreate.vue";
 import { useHistoryState } from "./utils";
 
@@ -27,7 +27,7 @@ const searchHits = ref<Question[]>([]);
 
 const searchQuestions = async ({ query }: { query: string }) => {
   searchStatus.value = "loading";
-  const result = await QuizAPI.Question.search({ query: "" });
+  const result = await API_Quiz.Question.search({ query: "" });
 
   if (result[0] === "err") {
     searchStatus.value = "error";
@@ -56,7 +56,7 @@ const onCreated = (question: Question) => {
 const deleteQuestion = async (question: Question) => {
   const prev = searchHits.value;
   searchHits.value = searchHits.value.filter((x) => x.id !== question.id);
-  const result = await QuizAPI.Question.deleteForever({
+  const result = await API_Quiz.Question.deleteForever({
     questionId: question.id,
   });
   if (result[0] === "err") {

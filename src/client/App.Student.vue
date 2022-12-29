@@ -1,10 +1,10 @@
 <script setup lang="ts">
+import { LMS_Context } from "../lti";
 import AppStudentDefaultVue from "./App.Student.Default.vue";
 import AppStudentQuizVue from "./App.Student.Quiz.vue";
-import { LTIContext } from "./LTI";
 
 defineProps<{
-  context: LTIContext;
+  context: LMS_Context;
 }>();
 </script>
 

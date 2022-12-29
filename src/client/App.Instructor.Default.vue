@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { LTILaunch } from "./LTI";
-import { Quiz, QuizAPI } from "./QuizAPI";
+import { LaunchMode } from "./API_LMS";
+import { Quiz, API_Quiz } from "./API_Quiz";
 import QuizCreate from "./QuizCreate.vue";
 import { useHistoryState } from "./utils";
 
-defineProps<{ launch: LTILaunch }>();
+defineProps<{ launchMode: LaunchMode }>();
 
 type Screen = "home" | "quiz-create";
 const [screen, pushScreen] = useHistoryState(
@@ -25,7 +25,7 @@ const quizzes = ref<Quiz[]>([]);
 const fetchStatus = ref<"idle" | "loading" | "error">("idle");
 const fetchQuizzes = async () => {
   fetchStatus.value = "loading";
-  const found = await QuizAPI.findMany();
+  const found = await API_Quiz.findMany();
   if (found[0] === "err") {
     fetchStatus.value = "error";
     return;
@@ -51,7 +51,7 @@ const onCreated = async (quiz: Quiz) => {
 };
 
 const deepLinkQuiz = async (quiz: Quiz) => {
-  await QuizAPI.deepLink(quiz);
+  await API_Quiz.deepLink(quiz);
 };
 </script>
 
@@ -88,7 +88,7 @@ const deepLinkQuiz = async (quiz: Quiz) => {
         {{ quiz.title }}
       </div>
       <button
-        v-if="launch === 'DeepLinking'"
+        v-if="launchMode === 'DeepLinking'"
         class="btn btn-primary"
         @click="deepLinkQuiz(quiz)">
         Deep Link

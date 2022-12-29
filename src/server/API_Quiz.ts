@@ -4,7 +4,7 @@ import { db, lti } from "./shared";
 const quizCol = db.collection("quizzes");
 const questionCol = db.collection("quiz-questions");
 
-export const useQuizRoutes = (app: express.Application) => {
+export const useAPI_Quiz = (app: express.Application) => {
   /* 
   
   
