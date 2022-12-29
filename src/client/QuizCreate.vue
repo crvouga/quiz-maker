@@ -111,7 +111,7 @@ const onRemove = (question: Question) => {
         class="py-2 flex items-center w-full">
         <div class="text-lg font-bold mr-2">{{ index + 1 }}.</div>
         <div class="flex-1 text-lg font-bold">
-          {{ question.question }}
+          {{ question.text }}
         </div>
         <button class="btn" @click="onRemove(question)">Remove</button>
       </li>

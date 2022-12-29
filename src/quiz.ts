@@ -7,18 +7,19 @@ This is app specific data
 
 */
 
-export const Answer = z.object({
-  id: z.string(),
-  answer: z.string(),
+export const Choice = z.object({
+  id: z.string().min(1),
+  text: z.string().min(1),
 });
-export type Answer = z.infer<typeof Answer>;
+export type Choice = z.infer<typeof Choice>;
 
 export const Question = z.object({
-  id: z.string(),
-  question: z.string(),
-  correctAnswerId: z.string(),
-  answers: z.array(Answer),
+  id: z.string().min(1),
+  text: z.string().min(1),
+  correctChoiceId: z.string().min(1),
+  choices: z.array(Choice),
 });
+
 export type Question = z.infer<typeof Question>;
 
 export const Quiz = z.object({
@@ -26,4 +27,5 @@ export const Quiz = z.object({
   title: z.string(),
   questions: z.array(Question),
 });
+
 export type Quiz = z.infer<typeof Quiz>;

@@ -2,56 +2,56 @@
 import { ref } from "vue";
 import { Id } from "../utils";
 import { API_Quiz } from "./API_Quiz";
-import { Answer, Question } from "../quiz";
+import { Choice, Question } from "../quiz";
 
 const emit = defineEmits<{
   (e: "created", question: Question): void;
 }>();
 
-const questionTitle = ref<string>("");
+const questionText = ref<string>("");
 
-const correctAnswerId = ref<string | null>(null);
-const markAsCorrect = (answer: Answer) => {
-  correctAnswerId.value = answer.id;
+const correctChoiceId = ref<string | null>(null);
+const markAsCorrect = (choice: Choice) => {
+  correctChoiceId.value = choice.id;
 };
 
-const answers = ref<Answer[]>([]);
-const answerInput = ref<string>("");
-const addAnswer = () => {
-  answers.value.push({
+const choices = ref<Choice[]>([]);
+const choiceText = ref<string>("");
+const addChoice = () => {
+  choices.value.push({
     id: Id.generate(),
-    answer: answerInput.value,
+    text: choiceText.value,
   });
-  answerInput.value = "";
+  choiceText.value = "";
 };
-const removeAnswer = (answer: Answer) => {
-  answers.value = answers.value.filter((a) => a.id !== answer.id);
+const removeChoice = (choice: Choice) => {
+  choices.value = choices.value.filter((a) => a.id !== choice.id);
 };
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 
 const posting = ref(false);
 const post = async () => {
-  if (!correctAnswerId.value) {
-    console.error("missing correct answer");
+  if (!correctChoiceId.value) {
+    console.error("missing correct choice");
     return;
   }
 
-  if (answers.value.length === 0) {
-    console.error("missing answers");
+  if (choices.value.length === 0) {
+    console.error("missing choices");
     return;
   }
 
-  if (questionTitle.value.length === 0) {
+  if (questionText.value.length === 0) {
     console.error("missing question title");
     return;
   }
 
   const question: Question = {
     id: Id.generate(),
-    question: questionTitle.value,
-    correctAnswerId: correctAnswerId.value,
-    answers: answers.value,
+    text: questionText.value,
+    correctChoiceId: correctChoiceId.value,
+    choices: choices.value,
   };
 
   posting.value = true;
@@ -77,7 +77,7 @@ const post = async () => {
       </label>
 
       <input
-        v-model="questionTitle"
+        v-model="questionText"
         type="text"
         placeholder="Some question?"
         class="w-full input input-primary input-bordered" />
@@ -85,40 +85,40 @@ const post = async () => {
 
     <!-- 
 
-    Answers
+    Choices
 
    -->
     <div class="form-control w-full mt-4">
       <label class="label">
-        <span class="label-text">Answers</span>
+        <span class="label-text">Choices</span>
       </label>
 
       <label class="input-group">
         <input
-          v-model="answerInput"
+          v-model="choiceText"
           type="text"
-          placeholder="Answer"
+          placeholder="Choice"
           class="w-full input input-bordered" />
-        <button @click="addAnswer" class="btn btn-primary">Add</button>
+        <button @click="addChoice" class="btn btn-primary">Add</button>
       </label>
     </div>
 
     <div
-      v-for="(answer, index) in answers"
+      v-for="(choice, index) in choices"
       class="font-bold p-2 flex w-full mt-4"
-      :class="{ 'text-green-500 bg-green-100': answer.id === correctAnswerId }">
+      :class="{ 'text-green-500 bg-green-100': choice.id === correctChoiceId }">
       <div class="mr-3">{{ alphabet[index] }}.</div>
       <div class="flex-1">
-        {{ answer.answer }}
+        {{ choice.text }}
       </div>
       <button
-        @click="removeAnswer(answer)"
+        @click="removeChoice(choice)"
         class="btn btn-xs btn-secondary mr-1">
         Remove
       </button>
       <button
-        @click="markAsCorrect(answer)"
-        :disabled="answer.id === correctAnswerId"
+        @click="markAsCorrect(choice)"
+        :disabled="choice.id === correctChoiceId"
         class="btn btn-xs btn-secondary">
         Mark as Correct
       </button>

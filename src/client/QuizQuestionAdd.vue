@@ -93,15 +93,15 @@ const deleteQuestion = async (question: Question) => {
     </div>
 
     <div
-      v-for="hit in searchHits"
-      v-bind:key="hit.id"
+      v-for="question in searchHits"
+      v-bind:key="question.id"
       class="flex items-center w-full">
       <div
         class="flex-1 p-3 font-bold text-lg cursor-pointer"
-        @click="emit('added', hit)">
-        {{ hit.question }}
+        @click="emit('added', question)">
+        {{ question.text }}
       </div>
-      <button @click="deleteQuestion(hit)" class="btn btn-xs mr-1">
+      <button @click="deleteQuestion(question)" class="btn btn-xs mr-1">
         Delete Forever
       </button>
     </div>

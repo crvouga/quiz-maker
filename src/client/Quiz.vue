@@ -6,34 +6,34 @@ defineProps<{
   quiz: Quiz;
 }>();
 
-const selectedAnswerIds = ref<{ [questionId: string]: { answerId: string } }>(
+const selectedChoiceIds = ref<{ [questionId: string]: { choiceId: string } }>(
   {}
 );
 
 const isSelected = ({
   questionId,
-  answerId,
+  choiceId,
 }: {
   questionId: string;
-  answerId: string;
+  choiceId: string;
 }) => {
-  return selectedAnswerIds.value[questionId]?.answerId === answerId;
+  return selectedChoiceIds.value[questionId]?.choiceId === choiceId;
 };
 
 const select = ({
   questionId,
-  answerId,
+  choiceId,
 }: {
   questionId: string;
-  answerId: string;
+  choiceId: string;
 }) => {
-  selectedAnswerIds.value[questionId] = { answerId };
+  selectedChoiceIds.value[questionId] = { choiceId };
 };
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 
-const submit = () => {
-  console.log(selectedAnswerIds.value);
+const onSubmit = () => {
+  console.log(selectedChoiceIds.value);
 };
 </script>
 
@@ -49,30 +49,30 @@ const submit = () => {
       <div class="flex items-center py-4">
         <div class="mr-2 text-xl">{{ index + 1 }}.</div>
         <div class="font-bold text-2xl">
-          {{ question.question }}
+          {{ question.text }}
         </div>
       </div>
 
       <div
-        v-for="(answer, index) in question.answers"
-        v-bind:key="answer.id"
-        @click="select({ questionId: question.id, answerId: answer.id })"
+        v-for="(choice, index) in question.choices"
+        v-bind:key="choice.id"
+        @click="select({ questionId: question.id, choiceId: choice.id })"
         class="flex items-center py-4 px-2 cursor-pointer hover:bg-gray-100">
         <input
           type="radio"
           class="radio radio-primary mr-2"
           :checked="
-            isSelected({ questionId: question.id, answerId: answer.id })
+            isSelected({ questionId: question.id, choiceId: choice.id })
           " />
         <div class="mr-2">{{ alphabet[index] }}.</div>
         <div class="text-lg">
-          {{ answer.answer }}
+          {{ choice.text }}
         </div>
       </div>
     </div>
 
     <div class="py-4 my-4">
-      <button class="btn btn-primary w-full" @click="submit">
+      <button class="btn btn-primary w-full" @click="onSubmit">
         Submit Quiz
       </button>
     </div>
