@@ -31,6 +31,10 @@ const select = ({
 };
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+
+const submit = () => {
+  console.log(selectedAnswerIds.value);
+};
 </script>
 
 <template>
@@ -68,7 +72,9 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
     </div>
 
     <div class="py-4 my-4">
-      <button class="btn btn-primary w-full">Submit Quiz</button>
+      <button class="btn btn-primary w-full" @click="submit">
+        Submit Quiz
+      </button>
     </div>
   </div>
 </template>
