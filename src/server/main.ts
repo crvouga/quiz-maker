@@ -41,15 +41,6 @@ useAPI_Quiz(lti.app);
 useAPI_LMS(lti.app);
 
 /* 
-
-As a fallback route, we'll just send the client html app
-
-lti.app.use((_req, res) => {
-  sendClientHTML(res);
-});
-*/
-
-/* 
   
  
  
