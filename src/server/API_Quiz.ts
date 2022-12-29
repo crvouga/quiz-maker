@@ -1,9 +1,10 @@
 import express from "express";
 import { Question, Quiz } from "../quiz";
+import { questions, quizzes } from "../quiz.sample-data";
 import { db, lti } from "./shared";
 
-const quizCol = db.collection<Quiz>("quizzes");
-const questionCol = db.collection<Question>("quiz-questions");
+export const quizCol = db.collection<Quiz>("quizzes");
+export const questionCol = db.collection<Question>("quiz-questions");
 
 export const useAPI_Quiz = async (app: express.Application) => {
   // database stuff for full text search questions
@@ -161,5 +162,16 @@ export const useAPI_Quiz = async (app: express.Application) => {
     const hits = await found.toArray();
     console.log(hits);
     res.status(200).send(hits).end();
+  });
+
+  /* 
+  
+  
+  */
+
+  app.post("/quiz-seed", async (req, res) => {
+    await questionCol.insertMany(questions);
+    await quizCol.insertMany(quizzes);
+    res.status(201).send({ message: "Seeded database" }).end();
   });
 };

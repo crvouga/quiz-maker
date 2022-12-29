@@ -1,5 +1,6 @@
 import express from "express";
 import { lti } from "./shared";
+import { CustomContext } from "../lti";
 
 export const useAPI_LMS = (app: express.Application) => {
   /* 
@@ -11,7 +12,7 @@ export const useAPI_LMS = (app: express.Application) => {
 
   app.post("/grade", async (req, res) => {
     try {
-      const idToken = res.locals.token; // IdToken
+      const idToken: any = res.locals.token; // IdToken
       const score = req.body.grade; // User numeric score sent in the body
       // Creating Grade object
       const gradeObj = {
@@ -87,16 +88,24 @@ export const useAPI_LMS = (app: express.Application) => {
 
   app.get("/context", async (req, res) => {
     const token = res.locals.token;
-    const context = res.locals.context;
-    const payload = {
+    const context: any = res.locals.context;
+    const payload: any = {
       ...context.context,
       roles: context?.roles,
       userName: token?.userInfo?.name,
       userEmail: token?.userInfo?.email,
-      custom: "type" in context?.custom ? context?.custom : { type: "default" },
+      custom: toCustomContext(context?.custom),
     };
     return res.send(payload);
   });
+
+  const toCustomContext = (context: unknown): CustomContext => {
+    const parsed = CustomContext.safeParse(context);
+    if (!parsed.success) {
+      return { type: "default" };
+    }
+    return parsed.data;
+  };
 
   /* 
   

@@ -8,7 +8,7 @@ This is app specific data we store and retrieve from the LMS
 
 */
 
-const CustomContext = z.discriminatedUnion("type", [
+export const CustomContext = z.discriminatedUnion("type", [
   z.object({
     type: z.literal("quiz"),
     quizId: z.string(),

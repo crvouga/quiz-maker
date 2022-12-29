@@ -171,4 +171,17 @@ export const API_Quiz = {
       }
     },
   },
+
+  async seed() {
+    try {
+      await fetch("/quiz-seed", {
+        method: "POST",
+        headers: {
+          Authorization: API_LMS.getAuthorizationHeader(),
+        },
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  },
 };

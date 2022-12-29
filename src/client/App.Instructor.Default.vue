@@ -54,6 +54,14 @@ const onCreated = async (quiz: Quiz) => {
 const deepLinkQuiz = async (quiz: Quiz) => {
   await API_Quiz.deepLink(quiz);
 };
+
+const seeding = ref(false);
+const seedDatabase = async () => {
+  seeding.value = true;
+  await API_Quiz.seed();
+  seeding.value = false;
+  await fetchQuizzes();
+};
 </script>
 
 <template>
@@ -61,7 +69,7 @@ const deepLinkQuiz = async (quiz: Quiz) => {
   <div v-else class="p-4">
     <h1 class="font-bold text-4xl text-left">Instructor Dashboard</h1>
     <button
-      class="btn btn-primary w-full mt-3"
+      class="btn btn-primary w-full mt-3 mb-4"
       @click="pushScreen('quiz-create')">
       Create New Quiz
     </button>
@@ -77,8 +85,14 @@ const deepLinkQuiz = async (quiz: Quiz) => {
     </div>
     <div
       v-else-if="quizzes.length === 0"
-      class="w-full h-36 flex items-center justify-center font-bold">
-      There are no quizzes. Try creating one.
+      class="w-full h-36 flex flex-col items-center justify-center">
+      <div class="font-bold">There are no quizzes.</div>
+      <button
+        class="btn btn-primary mt-4"
+        @click="seedDatabase"
+        :class="{ loading: seeding }">
+        Add sample quizzes
+      </button>
     </div>
     <div
       v-else

@@ -40,6 +40,10 @@ Hook up the API routes that our client app will consume
 useAPI_Quiz(lti.app);
 useAPI_LMS(lti.app);
 
+// lti.app.get("*", (_req, res) => {
+//   sendClientHTML(res);
+// });
+
 /* 
   
  
@@ -61,7 +65,7 @@ const startServer = async () => {
   await lti.registerPlatform({
     url: "http://localhost:8888/moodle",
     name: "Moodle",
-    clientId: "zTn6FWnZ4W21zmS",
+    clientId: "zFADOCswVIf6d77",
     authenticationEndpoint: "http://localhost:8888/moodle/mod/lti/auth.php",
     accesstokenEndpoint: "http://localhost:8888/moodle/mod/lti/token.php",
     authConfig: {
