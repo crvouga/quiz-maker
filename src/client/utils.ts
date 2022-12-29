@@ -1,9 +1,10 @@
 import { ref } from "vue";
 
-//
-//
-//
-//
+/* 
+
+
+
+*/
 
 export const useHistoryState = <T>(
   key: string,
@@ -28,20 +29,8 @@ export const useHistoryState = <T>(
   return [state, push] as const;
 };
 
-//
-//
-//
-//
+/* 
 
-export type Result<TErr, TData> = ["ok", TData] | ["err", TErr];
 
-//
-//
-//
-//
 
-export const Id = {
-  generate() {
-    return Math.random().toString(36).substring(2, 9);
-  },
-};
+*/

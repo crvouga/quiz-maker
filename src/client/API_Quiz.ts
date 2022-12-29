@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { Question, Quiz } from "../quiz";
+import { Result } from "../utils";
 import { API_LMS } from "./API_LMS";
-import { Result } from "./utils";
 
 export const API_Quiz = {
   //

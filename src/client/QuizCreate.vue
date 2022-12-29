@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Question, Quiz } from "../quiz";
+import { Id } from "../utils";
 import { API_Quiz } from "./API_Quiz";
 import QuizQuestionAdd from "./QuizQuestionAdd.vue";
-import { Id, useHistoryState } from "./utils";
+import { useHistoryState } from "./utils";
 
 const emit = defineEmits<{
   (e: "created", quiz: Quiz): void;

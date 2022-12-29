@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { LMS_Member, LMS_Context } from "../lti";
-import { Result } from "./utils";
+import { LMS_Context, LMS_Member } from "../lti";
+import { Result } from "../utils";
 
 const getAuthorizationHeader = () => {
   const searchParams = new URLSearchParams(window.location.search);

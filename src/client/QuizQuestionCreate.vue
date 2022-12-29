@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Id } from "./utils";
+import { Id } from "../utils";
 import { API_Quiz } from "./API_Quiz";
 import { Answer, Question } from "../quiz";
 
