@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Id } from "./utils";
-import { Answer, Question, API_Quiz } from "./API_Quiz";
+import { API_Quiz } from "./API_Quiz";
+import { Answer, Question } from "../quiz";
 
 const emit = defineEmits<{
   (e: "created", question: Question): void;

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Quiz } from "./API_Quiz";
+import { Quiz } from "../quiz";
 
 defineProps<{
   quiz: Quiz;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { Question, API_Quiz } from "./API_Quiz";
+import { Question } from "../quiz";
+import { API_Quiz } from "./API_Quiz";
 import QuizQuestionCreate from "./QuizQuestionCreate.vue";
 import { useHistoryState } from "./utils";
 
@@ -34,7 +35,7 @@ const searchQuestions = async ({ query }: { query: string }) => {
     return;
   }
   searchStatus.value = "idle";
-  searchHits.value = result[1].hits;
+  searchHits.value = result[1];
 };
 
 watch(searchQuery, async (query) => {

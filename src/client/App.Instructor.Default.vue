@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { Quiz } from "../quiz";
 import { LaunchMode } from "./API_LMS";
-import { Quiz, API_Quiz } from "./API_Quiz";
+import { API_Quiz } from "./API_Quiz";
 import QuizCreate from "./QuizCreate.vue";
 import { useHistoryState } from "./utils";
 

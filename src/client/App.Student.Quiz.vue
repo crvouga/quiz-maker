@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
+import { Quiz } from "../quiz";
+import { API_Quiz } from "./API_Quiz";
 import QuizVue from "./Quiz.vue";
-import { Quiz, API_Quiz } from "./API_Quiz";
 
 const props = defineProps<{
   quizId: string;

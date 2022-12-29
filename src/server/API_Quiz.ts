@@ -1,10 +1,14 @@
 import express from "express";
+import { Question, Quiz } from "../quiz";
 import { db, lti } from "./shared";
 
-const quizCol = db.collection("quizzes");
-const questionCol = db.collection("quiz-questions");
+const quizCol = db.collection<Quiz>("quizzes");
+const questionCol = db.collection<Question>("quiz-questions");
 
-export const useAPI_Quiz = (app: express.Application) => {
+export const useAPI_Quiz = async (app: express.Application) => {
+  // database stuff for full text search questions
+  await questionCol.createIndex({ question: "text" });
+
   /* 
   
   
@@ -12,7 +16,14 @@ export const useAPI_Quiz = (app: express.Application) => {
   */
 
   app.post("/quiz", async (req, res) => {
-    const quizNew = req.body;
+    const parsed = Quiz.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).send({ message: "Invalid quiz" }).end();
+      return;
+    }
+
+    const quizNew = parsed.data;
 
     const lineItem = {
       scoreMaximum: quizNew.questions.length,
@@ -37,7 +48,14 @@ export const useAPI_Quiz = (app: express.Application) => {
   
   */
   app.post("/quiz/deep-link", async (req, res) => {
-    const quiz = req.body;
+    const parsed = Quiz.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).send({ message: "Invalid quiz" }).end();
+      return;
+    }
+
+    const quiz = parsed.data;
 
     const items = [
       {
@@ -103,9 +121,18 @@ export const useAPI_Quiz = (app: express.Application) => {
   app.post("/quiz-question", async (req, res) => {
     console.log(req.body);
 
-    await questionCol.createIndex({ question: "text" });
-    await questionCol.insertOne(req.body);
+    const parsed = Question.safeParse(req.body);
+
+    if (!parsed.success) {
+      res.status(400).send({ message: "Invalid quiz question" }).end();
+      return;
+    }
+
+    const questionNew = parsed.data;
+
+    await questionCol.insertOne(questionNew);
     res.status(201).send({ message: "Quiz question created" }).end();
+    return;
   });
 
   /* 
@@ -129,11 +156,10 @@ export const useAPI_Quiz = (app: express.Application) => {
   */
 
   app.post("/quiz-question-search", async (req, res) => {
-    const searchQuery = req.query.query;
     console.log(req.query);
     const found = questionCol.find({});
     const hits = await found.toArray();
     console.log(hits);
-    res.status(200).send({ hits: hits }).end();
+    res.status(200).send(hits).end();
   });
 };

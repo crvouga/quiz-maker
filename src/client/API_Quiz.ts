@@ -1,31 +1,7 @@
 import { z } from "zod";
+import { Question, Quiz } from "../quiz";
 import { API_LMS } from "./API_LMS";
 import { Result } from "./utils";
-
-const Answer = z.object({
-  id: z.string(),
-  answer: z.string(),
-});
-export type Answer = z.infer<typeof Answer>;
-
-const Question = z.object({
-  id: z.string(),
-  question: z.string(),
-  correctAnswerId: z.string(),
-  answers: z.array(Answer),
-});
-export type Question = z.infer<typeof Question>;
-
-type SearchResult<T> = {
-  hits: T[];
-};
-
-const Quiz = z.object({
-  id: z.string(),
-  title: z.string(),
-  questions: z.array(Question),
-});
-export type Quiz = z.infer<typeof Quiz>;
 
 export const API_Quiz = {
   //
@@ -139,7 +115,7 @@ export const API_Quiz = {
       query,
     }: {
       query: string;
-    }): Promise<Result<string, SearchResult<Question>>> {
+    }): Promise<Result<string, Question[]>> {
       try {
         const response = await fetch(`/quiz-question-search?query=${query}`, {
           method: "POST",
@@ -150,11 +126,7 @@ export const API_Quiz = {
 
         const data = await response.json();
 
-        const parsed = z
-          .object({
-            hits: z.array(Question),
-          })
-          .safeParse(data);
+        const parsed = z.array(Question).safeParse(data);
 
         if (!parsed.success) {
           return ["err", String(parsed.error)];
