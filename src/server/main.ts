@@ -42,7 +42,7 @@ useAPI_LMS(lti.app);
 
 /* 
 
-Send client app for any other route
+As a fallback route, we'll just send the client html app
 
 */
 
