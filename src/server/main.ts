@@ -33,7 +33,7 @@ lti.app.get("/deeplink", async (req, res) => {
 
 /* 
 
-Hook up API routes for our client app to get data from
+Hook up the API routes that our client app will consume
 
 */
 
