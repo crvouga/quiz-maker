@@ -22,12 +22,15 @@ Build the client app whenever the client code changes
 npm run client:build:watch
 ```
 
+Now in a separate terminal.
 Run the server app whenever the server code changes.
 The server app serves the client app to the LMS
 
 ```
 npm run server:watch
 ```
+
+Done. Now the app is ready to be consumed by a LMS.
 
 ## Where does LTI fit in?
 
