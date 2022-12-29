@@ -11,7 +11,9 @@ Env Vars
 
 */
 
-dotenv.config();
+dotenv.config({
+  path: path.join(__dirname, "../../.env.server"),
+});
 
 const MONGOHOST = process.env["MONGOHOST"];
 
