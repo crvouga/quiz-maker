@@ -85,6 +85,28 @@ export const QuizAPI = {
     }
   },
 
+  async findOne({ quizId }: { quizId: string }): Promise<Result<string, Quiz>> {
+    try {
+      const response = await fetch(`/quiz/${quizId}`, {
+        method: "GET",
+        headers: {
+          Authorization: LTI.getAuthorizationHeader(),
+        },
+      });
+
+      const data = await response.json();
+
+      const parsed = Quiz.safeParse(data);
+
+      if (!parsed.success) {
+        return ["err", String(parsed.error)];
+      }
+      return ["ok", parsed.data];
+    } catch (error) {
+      return ["err", String(error)];
+    }
+  },
+
   async findMany(): Promise<Result<string, Quiz[]>> {
     try {
       const response = await fetch("/quiz", {

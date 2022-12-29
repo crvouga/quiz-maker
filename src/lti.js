@@ -65,33 +65,6 @@ router.get("/members", async (req, res) => {
   }
 });
 
-// Deep linking route
-router.post("/deeplink", async (req, res) => {
-  try {
-    const resource = req.body;
-
-    const items = {
-      type: "ltiResourceLink",
-      title: "Ltijs Demo",
-      custom: {
-        name: resource.name,
-        value: resource.value,
-      },
-    };
-
-    const form = await lti.DeepLinking.createDeepLinkingForm(
-      res.locals.token,
-      items,
-      { message: "Successfully Registered" }
-    );
-    if (form) return res.send(form);
-    return res.sendStatus(500);
-  } catch (err) {
-    console.log(err.message);
-    return res.status(500).send(err.message);
-  }
-});
-
 // Return available deep linking resources
 router.get("/resources", async (req, res) => {
   const resources = [
@@ -112,26 +85,23 @@ router.get("/resources", async (req, res) => {
 });
 
 // Get user and context information
-router.get("/info", async (req, res) => {
+router.get("/context", async (req, res) => {
   const token = res.locals.token;
   const context = res.locals.context;
-
-  const info = {};
-  if (token.userInfo) {
-    if (token.userInfo.name) info.name = token.userInfo.name;
-    if (token.userInfo.email) info.email = token.userInfo.email;
-  }
-
-  if (context.roles) info.roles = context.roles;
-  if (context.context) info.context = context.context;
-
-  return res.send(info);
+  const payload = {
+    ...context.context,
+    roles: context?.roles,
+    userName: token?.userInfo?.name,
+    userEmail: token?.userInfo?.email,
+    custom: "type" in context?.custom ? context?.custom : { type: "default" },
+  };
+  return res.send(payload);
 });
 
-// Wildcard route to deal with redirecting to React routes
-router.get("*", (req, res) =>
-  res.sendFile(path.join(__dirname, "../public/index.html"))
-);
+router.get("/line-items", async (req, res) => {
+  const result = await lti.Grade.getLineItems(res.locals.token);
+  return res.send(result);
+});
 
 module.exports = {
   router,

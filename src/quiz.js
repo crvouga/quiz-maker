@@ -12,6 +12,7 @@ router.post("/quiz", async (req, res) => {
   const lineItem = {
     scoreMaximum: quizNew.questions.length,
     label: quizNew.title,
+    resourceId: quizNew.id,
     tag: "quiz",
   };
   await ltijs.Grade.createLineItem(res.locals.token, lineItem);
@@ -49,6 +50,18 @@ router.post("/quiz/deep-link", async (req, res) => {
 router.get("/quiz", async (req, res) => {
   const quizzes = await quizCol.find({}).toArray();
   return res.status(200).send(quizzes).end();
+});
+
+router.get("/quiz/:quizId", async (req, res) => {
+  const quizId = req.params.quizId;
+
+  const found = await quizCol.findOne({ id: quizId });
+
+  if (!found) {
+    return res.status(404).json({ message: "quiz not found" }).end();
+  }
+
+  return res.status(200).json(found).end();
 });
 
 router.post("/quiz-question", async (req, res) => {

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { LTIInfo } from "./LTI";
+import { LTIContext } from "./LTI";
 
-defineProps<{ info: LTIInfo }>();
+defineProps<{ context: LTIContext }>();
 </script>
 
 <template>
   <h1>you are an student</h1>
   <pre>
-    {{ info }}
+    {{ context }}
   </pre>
 </template>

@@ -1,32 +1,26 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref } from "vue";
+import { AppMode } from "./app-mode";
 import AppInstructor from "./App.Instructor.vue";
 import AppStudent from "./App.Student.vue";
-import { AppMode } from "./app-mode";
-import { LTI, LTIInfo, LTIMember } from "./LTI";
+import { LTI, LTIContext } from "./LTI";
 
-const members = ref<LTIMember[]>([]);
-onMounted(async () => {
-  const got = await LTI.getMembers();
-  if (got[0] === "ok") {
-    members.value = got[1];
-  }
-});
-
-const info = ref<LTIInfo>();
+const context = ref<LTIContext>();
 const role = computed(() => {
-  if (info.value) {
-    return LTI.toRole(info.value);
+  if (context.value) {
+    return LTI.contextToRole(context.value);
   }
   return null;
 });
-
 onMounted(async () => {
-  const got = await LTI.getInfo();
+  const got = await LTI.getContext();
 
   if (got[0] === "ok") {
-    info.value = got[1];
+    context.value = got[1];
+    return;
   }
+
+  console.error(got);
 });
 
 //
@@ -34,7 +28,6 @@ onMounted(async () => {
 //
 
 const appMode = ref<AppMode>("default");
-
 onMounted(() => {
   if (window.location.pathname === "/deeplink") {
     appMode.value = "deepLinking";
@@ -47,16 +40,16 @@ onMounted(() => {
 
 <template>
   <pre>
-    {{ info }}
+    {{ context?.custom }}
   </pre>
   <div
     class="w-screen h-screen flex items-center justify-center font-bold"
-    v-if="!info">
+    v-if="!context">
     Loading...
   </div>
   <AppInstructor
     v-else-if="role === 'Instructor'"
     :appMode="appMode"
-    :info="info" />
-  <AppStudent v-else-if="role === 'Student'" :info="info" />
+    :context="context" />
+  <AppStudent v-else-if="role === 'Student'" :context="context" />
 </template>

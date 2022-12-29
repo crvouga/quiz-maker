@@ -57,25 +57,35 @@ const getMembers = async (): Promise<Result<string, Member[]>> => {
 //
 //
 
-const Info = z.object({
-  context: z.object({
-    id: z.string(),
-    label: z.string(),
-    title: z.string(),
-    type: z.array(z.string()),
+const CustomContext = z.discriminatedUnion("type", [
+  z.object({
+    type: z.literal("quiz"),
+    quizId: z.string(),
   }),
-  name: z.string().optional(),
-  email: z.string().optional(),
+  z.object({
+    type: z.literal("default"),
+  }),
+]);
+export type CustomContext = z.infer<typeof CustomContext>;
+
+const Context = z.object({
+  id: z.string(),
+  label: z.string(),
+  title: z.string(),
+  type: z.array(z.string()),
   roles: z.array(z.string()),
+  userName: z.string().optional(),
+  userEmail: z.string().optional(),
+  custom: CustomContext,
 });
 
-type Info = z.infer<typeof Info>;
+type Context = z.infer<typeof Context>;
 
-export type LTIInfo = Info;
+export type LTIContext = Context;
 
-export const getInfo = async (): Promise<Result<string, Info>> => {
+export const getContext = async (): Promise<Result<string, Context>> => {
   try {
-    const response = await fetch("/info", {
+    const response = await fetch("/context", {
       credentials: "include",
       headers: {
         Authorization: getAuthorizationHeader(),
@@ -84,9 +94,10 @@ export const getInfo = async (): Promise<Result<string, Info>> => {
 
     const data = await response.json();
 
-    const parsed = Info.safeParse(data);
-
+    const parsed = Context.safeParse(data);
+    console.log(data);
     if (!parsed.success) {
+      console.log(parsed.error);
       return ["err", "Failed to parse response"];
     }
 
@@ -106,7 +117,7 @@ export const getInfo = async (): Promise<Result<string, Info>> => {
 export type Role = "Instructor" | "Student";
 
 // TODO: unsure how well this works
-export const toRole = ({ roles }: { roles: string[] }): Role => {
+export const contextToRole = ({ roles }: { roles: string[] }): Role => {
   if (roles.some((role) => role.toLowerCase().includes("instructor"))) {
     return "Instructor";
   }
@@ -119,9 +130,35 @@ export const toRole = ({ roles }: { roles: string[] }): Role => {
 //
 //
 
+const getLineItems = async (): Promise<Result<string, any>> => {
+  try {
+    const response = await fetch("/line-items", {
+      credentials: "include",
+      headers: {
+        Authorization: getAuthorizationHeader(),
+      },
+    });
+
+    const data = await response.json();
+
+    console.log("line items", data);
+
+    return ["ok", data];
+  } catch (err) {
+    return ["err", String(err)];
+  }
+};
+
+//
+//
+//
+//
+//
+
 export const LTI = {
   getMembers,
-  getInfo,
-  toRole,
+  getContext,
+  contextToRole,
   getAuthorizationHeader,
+  getLineItems,
 };

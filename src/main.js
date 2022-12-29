@@ -49,6 +49,11 @@ ltijs.app.get("/deeplink", async (req, res) => {
 ltijs.app.use(quiz.router);
 ltijs.app.use(lti.router);
 
+// Wildcard route to deal with redirecting to React routes
+ltijs.app.get("*", (req, res) => {
+  res.sendFile(path.join(clientAppDistPath, "/index.html"));
+});
+
 // Setup function
 const setup = async () => {
   await ltijs.deploy({ port: process.env.PORT });

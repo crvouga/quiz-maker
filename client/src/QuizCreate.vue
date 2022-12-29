@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { Id } from "./Id";
-import { LTIInfo } from "./LTI";
+import { LTIContext } from "./LTI";
 import { Question, Quiz, QuizAPI } from "./QuizAPI";
 import QuizQuestionAdd from "./QuizQuestionAdd.vue";
 import { useHistoryState } from "./useHistoryState";
 
-defineProps<{ info: LTIInfo }>();
+defineProps<{ context: LTIContext }>();
 
 const emit = defineEmits<{
   (e: "created", quiz: Quiz): void;
@@ -69,7 +69,7 @@ const onRemove = (question: Question) => {
 </script>
 
 <template>
-  <QuizQuestionAdd v-if="screen === 'add'" :info="info" @added="onAdd" />
+  <QuizQuestionAdd v-if="screen === 'add'" :context="context" @added="onAdd" />
   <div
     v-else-if="screen === 'create'"
     class="flex flex-col justify-center items-center p-4">
