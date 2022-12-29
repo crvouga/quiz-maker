@@ -3,13 +3,13 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "server:dev": "npx ts-node-dev --project ./tsconfig.server.json src/server/main.ts",
+    "server:watch": "npx ts-node-dev --project ./tsconfig.server.json src/server/main.ts",
     "server:build": "npx tsc --build tsconfig.server.json",
     "server:start": "node build/src/server/main.js",
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "build:watch": "npx vite build --watch",
-    "preview": "vite preview"
+    "client:dev": "vite",
+    "client:build": "vue-tsc && vite build",
+    "client:watch": "vite",
+    "client:build:watch": "npx vite build --watch"
   },
   "dependencies": {
     "dotenv": "^16.0.3",
