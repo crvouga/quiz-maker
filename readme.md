@@ -1,6 +1,6 @@
 # Learning Tool
 
-This an example learning tool app to demonstrate LTI. It's meant to run instead of a LMS like Canvas or Blackboard
+This an example learning tool app. It's meant to interop with a LMS (like Canvas or Blackboard) using LTI 1.3
 
 ![Image](/docs/high-level.png)
 
