@@ -5,12 +5,23 @@ import { envVars, lti } from "./shared";
 
 const clientHtml = path.join(__dirname, "../../dist/index.html");
 
-// LMS launches our app
+/* 
+  
+lti.onConnect fires when the LMS launches our app
+so we'll send the client html app that will run inside of the LMS
+
+*/
 lti.onConnect((token, req, res) => {
   return res.sendFile(clientHtml);
 });
 
-// When receiving deep linking request redirects to deep screen
+/* 
+  
+lti.onDeepLinking fires when the LMS launches our app for select specific content
+so we'll send the client html app but with the /deeplink route so the client app knows
+that it should render the deep linking view
+
+*/
 lti.onDeepLinking((token, req, res) => {
   // Call redirect function to deep linking view
   return lti.redirect(res, "/deeplink");
@@ -19,21 +30,28 @@ lti.app.get("/deeplink", async (req, res) => {
   return res.sendFile(clientHtml);
 });
 
-// Setting up routes
+/* 
+
+
+
+
+*/
 useQuizRoutes(lti.app);
 useLMSRoutes(lti.app);
-
-// Wildcard route to deal with redirecting to React routes
 lti.app.get("*", (req, res) => {
   res.sendFile(clientHtml);
 });
 
+/* 
+
+
+This is where we run our app and register platforms like Moodle, Canvas, Blackboard, etc.
+
+
+*/
 const setup = async () => {
   await lti.deploy({ port: Number(envVars.PORT) });
 
-  /**
-   * Register platform
-   */
   await lti.registerPlatform({
     url: "http://localhost:8888/moodle",
     name: "Moodle",

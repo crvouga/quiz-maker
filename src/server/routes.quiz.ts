@@ -5,6 +5,12 @@ const quizCol = db.collection("quizzes");
 const questionCol = db.collection("quiz-questions");
 
 export const useQuizRoutes = (app: express.Application) => {
+  /* 
+  
+  
+  
+  */
+
   app.post("/quiz", async (req, res) => {
     const quizNew = req.body;
 
@@ -23,7 +29,13 @@ export const useQuizRoutes = (app: express.Application) => {
     return res.status(201).send({ message: "Quiz created" }).end();
   });
 
-  // docs: https://cvmcosta.me/ltijs/#/deeplinking
+  /* 
+  
+  
+  docs: https://cvmcosta.me/ltijs/#/deeplinking
+  
+  
+  */
   app.post("/quiz/deep-link", async (req, res) => {
     const quiz = req.body;
 
@@ -50,10 +62,24 @@ export const useQuizRoutes = (app: express.Application) => {
     });
   });
 
+  /* 
+  
+  
+  
+
+  */
+
   app.get("/quiz", async (req, res) => {
     const quizzes = await quizCol.find({}).toArray();
     return res.status(200).send(quizzes).end();
   });
+
+  /* 
+  
+  
+ 
+ 
+  */
 
   app.get("/quiz/:quizId", async (req, res) => {
     const quizId = req.params.quizId;
@@ -67,6 +93,13 @@ export const useQuizRoutes = (app: express.Application) => {
     return res.status(200).json(found).end();
   });
 
+  /* 
+  
+  
+ 
+ 
+  */
+
   app.post("/quiz-question", async (req, res) => {
     console.log(req.body);
 
@@ -75,11 +108,25 @@ export const useQuizRoutes = (app: express.Application) => {
     res.status(201).send({ message: "Quiz question created" }).end();
   });
 
+  /* 
+  
+  
+ 
+ 
+  */
+
   app.delete("/quiz-question/:id", async (req, res) => {
     const questionId = req.params.id;
     await questionCol.deleteOne({ id: questionId });
     res.status(201).send({ message: "Quiz question created" }).end();
   });
+
+  /* 
+  
+  
+ 
+ 
+  */
 
   app.post("/quiz-question-search", async (req, res) => {
     const searchQuery = req.query.query;
