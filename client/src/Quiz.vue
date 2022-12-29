@@ -35,7 +35,7 @@ const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 
 <template>
   <div class="p-4">
-    <h1 class="font-bold text-4xl text-center mb-8">
+    <h1 class="font-bold text-4xl text-center mt-4 mb-8">
       {{ quiz.title }}
     </h1>
     <div

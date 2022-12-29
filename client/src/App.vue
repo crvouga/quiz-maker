@@ -48,5 +48,8 @@ onMounted(() => {
     v-else-if="role === 'Instructor'"
     :appMode="appMode"
     :context="context" />
-  <AppStudent v-else-if="role === 'Student'" :context="context" />
+  <AppStudent
+    v-else-if="role === 'Student'"
+    :context="context"
+    :appMode="appMode" />
 </template>

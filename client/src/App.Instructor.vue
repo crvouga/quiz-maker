@@ -8,6 +8,9 @@ defineProps<{ context: LTIContext; appMode: AppMode }>();
 </script>
 
 <template>
+  <div class="bg-primary text-white text-center py-2 font-bold w-full">
+    Instructor View
+  </div>
   <AppInstructorDefault
     v-if="context.custom.type === 'default'"
     :context="context"
