@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { Result } from "./Result";
 import { LTI } from "./LTI";
+import { Result } from "./utils";
 
 const Answer = z.object({
   id: z.string(),
@@ -28,6 +28,11 @@ const Quiz = z.object({
 export type Quiz = z.infer<typeof Quiz>;
 
 export const QuizAPI = {
+  //
+  //
+  // Select a quiz from the LMS assignment
+  //
+  //
   async deepLink(quiz: Quiz): Promise<Result<string, null>> {
     try {
       const response = await fetch("/quiz/deep-link", {

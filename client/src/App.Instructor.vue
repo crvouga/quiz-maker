@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { AppMode } from "./app-mode";
 import AppInstructorDefault from "./App.Instructor.Default.vue";
 import AppInstructorQuiz from "./App.Instructor.Quiz.vue";
-import { LTIContext } from "./LTI";
+import { LTIContext, LTILaunch } from "./LTI";
 
-defineProps<{ context: LTIContext; appMode: AppMode }>();
+defineProps<{ context: LTIContext; launch: LTILaunch }>();
 </script>
 
 <template>
@@ -13,11 +12,8 @@ defineProps<{ context: LTIContext; appMode: AppMode }>();
   </div>
   <AppInstructorDefault
     v-if="context.custom.type === 'default'"
-    :context="context"
-    :app-mode="appMode" />
+    :launch="launch" />
   <AppInstructorQuiz
     v-if="context.custom.type === 'quiz'"
-    :context="context"
-    :app-mode="appMode"
     :quiz-id="context.custom.quizId" />
 </template>

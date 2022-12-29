@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { AppMode } from "./app-mode";
-import { LTIContext } from "./LTI";
 import QuizVue from "./Quiz.vue";
 import { Quiz, QuizAPI } from "./QuizAPI";
 
 const props = defineProps<{
-  context: LTIContext;
-  appMode: AppMode;
   quizId: string;
 }>();
 

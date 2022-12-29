@@ -1,17 +1,11 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
-import { AppMode } from "./app-mode";
+import { onMounted, ref } from "vue";
 import AppInstructor from "./App.Instructor.vue";
 import AppStudent from "./App.Student.vue";
-import { LTI, LTIContext } from "./LTI";
+import { LTI, LTIContext, LTILaunch } from "./LTI";
 
-const context = ref<LTIContext>();
-const role = computed(() => {
-  if (context.value) {
-    return LTI.contextToRole(context.value);
-  }
-  return null;
-});
+const context = ref<LTIContext | null>(null);
+
 onMounted(async () => {
   const got = await LTI.getContext();
 
@@ -23,18 +17,9 @@ onMounted(async () => {
   console.error(got);
 });
 
-//
-//
-//
-
-const appMode = ref<AppMode>("default");
+const launch = ref<LTILaunch>("Default");
 onMounted(() => {
-  if (window.location.pathname === "/deeplink") {
-    appMode.value = "deepLinking";
-    return;
-  }
-  appMode.value = "default";
-  return;
+  launch.value = LTI.getLTILaunch();
 });
 </script>
 
@@ -45,11 +30,17 @@ onMounted(() => {
     Loading...
   </div>
   <AppInstructor
-    v-else-if="role === 'Instructor'"
-    :appMode="appMode"
+    v-else-if="LTI.contextToRole(context) === 'Instructor'"
+    :launch="launch"
     :context="context" />
   <AppStudent
-    v-else-if="role === 'Student'"
-    :context="context"
-    :appMode="appMode" />
+    v-else-if="LTI.contextToRole(context) === 'Student'"
+    :context="context" />
 </template>
+
+<!-- tailwind boilerplate -->
+<style>
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+</style>

@@ -1,13 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-
+import { LTILaunch } from "./LTI";
 import { Quiz, QuizAPI } from "./QuizAPI";
-import { LTIContext } from "./LTI";
 import QuizCreate from "./QuizCreate.vue";
-import { useHistoryState } from "./useHistoryState";
-import { AppMode } from "./app-mode";
+import { useHistoryState } from "./utils";
 
-defineProps<{ context: LTIContext; appMode: AppMode }>();
+defineProps<{ launch: LTILaunch }>();
 
 type Screen = "home" | "quiz-create";
 const [screen, pushScreen] = useHistoryState(
@@ -58,10 +56,7 @@ const deepLinkQuiz = async (quiz: Quiz) => {
 </script>
 
 <template>
-  <QuizCreate
-    v-if="screen === 'quiz-create'"
-    :context="context"
-    @created="onCreated" />
+  <QuizCreate v-if="screen === 'quiz-create'" @created="onCreated" />
   <div v-else class="p-4">
     <h1 class="font-bold text-4xl text-left">Instructor Dashboard</h1>
     <button
@@ -93,7 +88,7 @@ const deepLinkQuiz = async (quiz: Quiz) => {
         {{ quiz.title }}
       </div>
       <button
-        v-if="appMode === 'deepLinking'"
+        v-if="launch === 'DeepLinking'"
         class="btn btn-primary"
         @click="deepLinkQuiz(quiz)">
         Deep Link

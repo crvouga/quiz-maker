@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Id } from "./Id";
-import { LTIContext } from "./LTI";
+import { Id } from "./utils";
 import { Answer, Question, QuizAPI } from "./QuizAPI";
-
-defineProps<{ context: LTIContext }>();
 
 const emit = defineEmits<{
   (e: "created", question: Question): void;

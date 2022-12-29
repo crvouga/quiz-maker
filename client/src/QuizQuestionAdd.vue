@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
-import { LTIContext } from "./LTI";
 import { Question, QuizAPI } from "./QuizAPI";
 import QuizQuestionCreate from "./QuizQuestionCreate.vue";
-import { useHistoryState } from "./useHistoryState";
-
-defineProps<{ context: LTIContext }>();
+import { useHistoryState } from "./utils";
 
 //
 //
@@ -70,10 +67,7 @@ const deleteQuestion = async (question: Question) => {
 </script>
 
 <template>
-  <QuizQuestionCreate
-    v-if="screen === 'create-new'"
-    :context="context"
-    @created="onCreated" />
+  <QuizQuestionCreate v-if="screen === 'create-new'" @created="onCreated" />
 
   <div
     v-else-if="screen === 'add'"

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Result } from "./Result";
+import { Result } from "./utils";
 
 const getLTIK = () => {
   const searchParams = new URLSearchParams(window.location.search);
@@ -53,7 +53,7 @@ const getMembers = async (): Promise<Result<string, Member[]>> => {
 
 //
 //
-// Info
+// Custom
 //
 //
 
@@ -67,6 +67,12 @@ const CustomContext = z.discriminatedUnion("type", [
   }),
 ]);
 export type CustomContext = z.infer<typeof CustomContext>;
+
+//
+//
+// This is data we get the LMS
+//
+//
 
 const Context = z.object({
   id: z.string(),
@@ -153,6 +159,20 @@ const getLineItems = async (): Promise<Result<string, any>> => {
 //
 //
 //
+
+export type LTILaunch = "Default" | "DeepLinking";
+
+const getLTILaunch = (): LTILaunch => {
+  if (window.location.pathname === "/deeplink") {
+    return "DeepLinking";
+  }
+  return "Default";
+};
+
+//
+//
+//
+//
 //
 
 export const LTI = {
@@ -161,4 +181,5 @@ export const LTI = {
   contextToRole,
   getAuthorizationHeader,
   getLineItems,
+  getLTILaunch,
 };
