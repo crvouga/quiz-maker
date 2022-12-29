@@ -39,9 +39,6 @@ onMounted(() => {
 </script>
 
 <template>
-  <pre>
-    {{ context?.custom }}
-  </pre>
   <div
     class="w-screen h-screen flex items-center justify-center font-bold"
     v-if="!context">

@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import { AppMode } from "./app-mode";
 import { LTIContext } from "./LTI";
+import QuizVue from "./Quiz.vue";
 import { Quiz, QuizAPI } from "./QuizAPI";
 
 const props = defineProps<{
@@ -25,11 +26,16 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
-    quiz context
-    {{ quizId }}
-    app mode
-    {{ appMode }}
-    <pre> {{ state }}</pre>
+  <div
+    v-if="state[0] === 'loading'"
+    class="flex items-center justify-center h-36">
+    Loading quiz...
   </div>
+  <div
+    v-else-if="state[0] === 'err'"
+    class="flex items-center justify-center h-36 text-red-400">
+    Failed to load quiz.
+    {{ state[1] }}
+  </div>
+  <QuizVue v-if="state[0] === 'ok'" :quiz="state[1]" />
 </template>
