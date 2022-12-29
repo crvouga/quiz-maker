@@ -23,7 +23,6 @@ that it should render the deep linking view
 
 */
 lti.onDeepLinking((token, req, res) => {
-  // Call redirect function to deep linking view
   return lti.redirect(res, "/deeplink");
 });
 lti.app.get("/deeplink", async (req, res) => {
@@ -39,8 +38,8 @@ lti.app.get("/deeplink", async (req, res) => {
 
 useQuizRoutes(lti.app);
 useLMSRoutes(lti.app);
-lti.app.get("*", (req, res) => {
-  res.sendFile(clientAppPath);
+lti.app.get("*", (_req, res) => {
+  return res.sendFile(clientAppPath);
 });
 
 /* 
