@@ -3,7 +3,7 @@ import { z } from "zod";
 /* 
 
 
-This is app specific data we store in the LMS
+This is app specific data we store and retrieve from the LMS
 
 
 */
@@ -42,7 +42,21 @@ export type LMS_Context = z.infer<typeof LMS_Context>;
 /* 
 
 
+Users stored in the LMS are call "members"
 
+
+*/
+
+export const LMS_Member = z.object({
+  roles: z.array(z.string()),
+  user_id: z.string(),
+});
+export type LMS_Member = z.infer<typeof LMS_Member>;
+
+/* 
+
+
+Users in the LMS can have many types of roles but theses are the ones we care about for our app
 
 */
 
@@ -54,17 +68,3 @@ export const toRole = ({ roles }: { roles: string[] }): Role => {
   }
   return "Student";
 };
-
-/* 
-
-
-
-
-
-*/
-
-export const LMS_Member = z.object({
-  roles: z.array(z.string()),
-  user_id: z.string(),
-});
-export type LMS_Member = z.infer<typeof LMS_Member>;
