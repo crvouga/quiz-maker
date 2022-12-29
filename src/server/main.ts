@@ -1,18 +1,17 @@
-import path from "path";
 import { useAPI_LMS } from "./API_LMS";
 import { useAPI_Quiz } from "./API_Quiz";
-import { envVars, lti } from "./shared";
-
-const clientAppPath = path.join(__dirname, "../../dist/index.html");
+import { envVars, lti, sendClientHTML } from "./shared";
 
 /* 
-  
+
 lti.onConnect fires when the LMS launches our app
 so we'll send the client html app that will run inside of the LMS
 
 */
 lti.onConnect((token, req, res) => {
-  return res.sendFile(clientAppPath);
+  console.log("[server] LMS launched");
+  sendClientHTML(res);
+  return;
 });
 
 /* 
@@ -23,38 +22,48 @@ that it should render the deep linking view
 
 */
 lti.onDeepLinking((token, req, res) => {
-  return lti.redirect(res, "/deeplink");
+  console.log("[server] LMS launched deep linking");
+  lti.redirect(res, "/deeplink");
+  return;
 });
 lti.app.get("/deeplink", async (req, res) => {
-  return res.sendFile(clientAppPath);
+  sendClientHTML(res);
+  return;
 });
 
 /* 
 
-
-
+Hook up API routes for our client app to get data from
 
 */
 
 useAPI_Quiz(lti.app);
 useAPI_LMS(lti.app);
-lti.app.get("*", (_req, res) => {
-  return res.sendFile(clientAppPath);
+
+/* 
+
+Send client app for any other route
+
+*/
+
+lti.app.use((_req, res) => {
+  sendClientHTML(res);
 });
 
 /* 
   
  
+ 
   
 */
 
-const main = async () => {
+const startServer = async () => {
   await lti.deploy({ port: Number(envVars.PORT) });
 
   /* 
 
 
-  This is where we hook up specific platforms like Moodle, Canvas, Blackboard, etc.
+  This is where we hook up platforms like Moodle, Canvas, Blackboard, etc.
 
 
   */
@@ -72,4 +81,4 @@ const main = async () => {
   });
 };
 
-main();
+startServer();

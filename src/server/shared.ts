@@ -1,7 +1,8 @@
+import dotenv from "dotenv";
 import ltijs from "ltijs";
 import { MongoClient } from "mongodb";
 import path from "path";
-import dotenv from "dotenv";
+import express from "express";
 
 /* 
 
@@ -72,15 +73,39 @@ const mongoUrl = `mongodb://${MONGOUSER}:${MONGOPASSWORD}@${MONGOHOST}:${MONGOPO
 
 const client = new MongoClient(mongoUrl);
 
+client.on("open", () => {
+  console.log("[mongodb] connection open");
+});
+
+client.on("close", () => {
+  console.log("[mongodb] connection closed");
+});
+
 export const db = client.db("learning-tool");
+
+/* 
+
+
+Client Side App HTML
+
+
+
+*/
+
+const clientAppHTML_Path = path.join(__dirname, "..", "..", "dist");
+
+export const sendClientHTML = (res: express.Response) => {
+  return res.sendFile(path.join(clientAppHTML_Path, "index.html"));
+};
 
 /* 
 
 
 LTI Instance
 
+This is the ltijs instance that we'll use to handle LTI requests
 
-WARNING: the types provided by @types/ltijs do not match the actual ltijs library
+WARNING! The types provided by @types/ltijs do not match the actual ltijs library.
 
 
 */
@@ -99,7 +124,7 @@ lti.setup(
     connection: { user: MONGOUSER, pass: MONGOPASSWORD },
   },
   {
-    staticPath: path.join(__dirname, "../../dist"), // Path to static files
+    staticPath: clientAppHTML_Path, // Path to static files
     cookies: {
       secure: false, // Set secure to true if the testing platform is in a different domain and https is being used
       sameSite: "", // Set sameSite to 'None' if the testing platform is in a different domain and https is being used
