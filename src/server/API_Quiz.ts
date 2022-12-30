@@ -8,7 +8,7 @@ import {
   toScoreMaximum,
 } from "../quiz";
 import { questions, quizzes } from "../quiz.sample-data";
-import { db, lti, submitScore } from "./shared";
+import { createLineItem, db, lti, submitScore } from "./shared";
 
 export const quizCol = db.collection<Quiz>("quizzes");
 export const questionCol = db.collection<Question>("quiz-questions");
@@ -55,17 +55,28 @@ export const useAPI_Quiz = async (app: express.Application) => {
       res.status(400).send({ message: "Invalid body" }).end();
       return;
     }
+    const quizSubmission = parsed.data;
 
     const idToken = res.locals.token;
 
-    const lineItemId = idToken.platformContext.endpoint.lineitem;
+    // const lineItemId = idToken.platformContext.endpoint.lineitem;
+    // if (typeof lineItemId !== "string") {
+    //   res.status(500).send({ message: "no line item id" }).end();
+    //   return;
+    // }
 
-    if (typeof lineItemId !== "string") {
-      res.status(500).send({ message: "no line item id" }).end();
-      return;
+    const created = await createLineItem(idToken, {
+      label: "Grade",
+      resourceId: parsed.data.quiz.id,
+      scoreMaximum: toScoreMaximum(parsed.data),
+      tag: "quiz",
+    });
+
+    if (created[0] === "err") {
+      return res.status(500).send({ message: created[1] }).end();
     }
 
-    const quizSubmission = parsed.data;
+    const lineItem = created[1];
 
     const grade: LineItemGrade = {
       activityProgress: "Completed",
@@ -77,7 +88,7 @@ export const useAPI_Quiz = async (app: express.Application) => {
 
     const submitted = await submitScore({
       idToken,
-      lineItemId,
+      lineItemId: lineItem.id,
       grade,
     });
 

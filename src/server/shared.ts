@@ -154,6 +154,23 @@ export const createLineItem = async (
   return ["ok", parsed.data];
 };
 
+/* 
+
+
+
+
+WARNING for Moodle users!
+
+https://github.com/Cvmcosta/ltijs/issues/65
+
+Make sure the user submitting the grade is enrolled in the course!
+The admin user is not enrolled by default.
+
+
+
+
+
+*/
 export const submitScore = async ({
   idToken,
   grade,
