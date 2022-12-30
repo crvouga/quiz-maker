@@ -43,3 +43,17 @@ export const QuizSubmission = z.object({
   answersByQuestionId: AnswersByQuestionId,
 });
 export type QuizSubmission = z.infer<typeof QuizSubmission>;
+
+export const toScore = (submission: QuizSubmission): number => {
+  return submission.quiz.questions.reduce((acc, question) => {
+    const answer = submission.answersByQuestionId[question.id];
+    if (answer && answer.choiceId === question.correctChoiceId) {
+      return acc + 1;
+    }
+    return acc;
+  }, 0);
+};
+
+export const toScoreMaximum = (submission: QuizSubmission): number => {
+  return submission.quiz.questions.length;
+};

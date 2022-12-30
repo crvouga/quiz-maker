@@ -1,8 +1,14 @@
 import express from "express";
-import { z } from "zod";
-import { AnswersByQuestionId, Question, Quiz, QuizSubmission } from "../quiz";
+import { LineItemGrade } from "../lti";
+import {
+  Question,
+  Quiz,
+  QuizSubmission,
+  toScore,
+  toScoreMaximum,
+} from "../quiz";
 import { questions, quizzes } from "../quiz.sample-data";
-import { db, lti } from "./shared";
+import { db, lti, submitScore } from "./shared";
 
 export const quizCol = db.collection<Quiz>("quizzes");
 export const questionCol = db.collection<Question>("quiz-questions");
@@ -29,24 +35,7 @@ export const useAPI_Quiz = async (app: express.Application) => {
 
     const quizNew = parsed.data;
 
-    const lineItem = {
-      scoreMaximum: quizNew.questions.length,
-      label: quizNew.title,
-      resourceId: quizNew.id,
-      tag: "quiz",
-    };
-
-    console.log("creating quiz line item");
-    // @ts-ignore
-    const created = await lti.Grade.createLineItem(res.locals.token, lineItem);
-
-    console.log(created);
-
-    console.log("created so inserting quiz into db");
-
-    await quizCol.insertOne(req.body);
-
-    console.log("done");
+    await quizCol.insertOne(quizNew);
 
     return res.status(201).send({ message: "Quiz created" }).end();
   });
@@ -67,11 +56,38 @@ export const useAPI_Quiz = async (app: express.Application) => {
       return;
     }
 
-    const { quiz, answersByQuestionId } = parsed.data;
+    const idToken = res.locals.token;
 
-    console.log("quiz", quiz);
-    console.log("answersByQuestionId", answersByQuestionId);
-    res.status(500).send({ message: "Not implemented" }).end();
+    const lineItemId = idToken.platformContext.endpoint.lineitem;
+
+    if (typeof lineItemId !== "string") {
+      res.status(500).send({ message: "no line item id" }).end();
+      return;
+    }
+
+    const quizSubmission = parsed.data;
+
+    const grade: LineItemGrade = {
+      activityProgress: "Completed",
+      gradingProgress: "FullyGraded",
+      scoreGiven: toScore(quizSubmission),
+      scoreMaximum: toScoreMaximum(quizSubmission),
+      userId: idToken.user,
+    };
+
+    const submitted = await submitScore({
+      idToken,
+      lineItemId,
+      grade,
+    });
+
+    if (submitted[0] === "err") {
+      res.status(500).send({ message: submitted[1] }).end();
+      return;
+    }
+
+    res.status(201).send({ message: "Submitted grade" }).end();
+    return;
   });
 
   /* 
@@ -95,7 +111,6 @@ export const useAPI_Quiz = async (app: express.Application) => {
       {
         type: "ltiResourceLink",
         title: quiz.title,
-        // url: "/", // none
         custom: {
           type: "quiz",
           quizId: quiz.id,

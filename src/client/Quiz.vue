@@ -2,9 +2,11 @@
 import { ref } from "vue";
 import { AnswersByQuestionId, Quiz } from "../quiz";
 import { API_Quiz } from "./API_Quiz";
+import { LTI_Context } from "../lti";
 
-const { quiz } = defineProps<{
+const { quiz, context } = defineProps<{
   quiz: Quiz;
+  context: LTI_Context;
 }>();
 
 const answersByQuestionId = ref<AnswersByQuestionId>({});

@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { LMS_Context } from "../lti";
+import { LTI_Context } from "../lti";
 import AppStudentDefaultVue from "./App.Student.Default.vue";
 import AppStudentQuizVue from "./App.Student.Quiz.vue";
 
 defineProps<{
-  context: LMS_Context;
+  context: LTI_Context;
 }>();
 </script>
 
@@ -12,5 +12,6 @@ defineProps<{
   <AppStudentDefaultVue v-if="context.custom.type === 'default'" />
   <AppStudentQuizVue
     v-else-if="context.custom.type === 'quiz'"
+    :context="context"
     :quiz-id="context.custom.quizId" />
 </template>

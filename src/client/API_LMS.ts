@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { LMS_Context, LMS_Member } from "../lti";
+import { LTI_Context, LTI_Member } from "../lti";
 import { Result } from "../utils";
 
 const getAuthorizationHeader = () => {
@@ -17,7 +17,7 @@ const getAuthorizationHeader = () => {
 
 */
 
-const getMembers = async (): Promise<Result<string, LMS_Member[]>> => {
+const getMembers = async (): Promise<Result<string, LTI_Member[]>> => {
   try {
     const response = await fetch("/members", {
       credentials: "include",
@@ -28,7 +28,7 @@ const getMembers = async (): Promise<Result<string, LMS_Member[]>> => {
 
     const data = await response.json();
 
-    const parsed = z.array(LMS_Member).safeParse(data);
+    const parsed = z.array(LTI_Member).safeParse(data);
 
     if (!parsed.success) {
       return ["err", "Failed to parse response"];
@@ -40,7 +40,7 @@ const getMembers = async (): Promise<Result<string, LMS_Member[]>> => {
   }
 };
 
-export const getContext = async (): Promise<Result<string, LMS_Context>> => {
+export const getContext = async (): Promise<Result<string, LTI_Context>> => {
   try {
     const response = await fetch("/context", {
       credentials: "include",
@@ -51,7 +51,7 @@ export const getContext = async (): Promise<Result<string, LMS_Context>> => {
 
     const data = await response.json();
 
-    const parsed = LMS_Context.safeParse(data);
+    const parsed = LTI_Context.safeParse(data);
 
     if (!parsed.success) {
       return ["err", "Failed to parse response"];

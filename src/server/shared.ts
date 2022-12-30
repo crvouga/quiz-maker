@@ -1,8 +1,10 @@
 import dotenv from "dotenv";
+import express from "express";
 import ltijs from "ltijs";
 import { MongoClient } from "mongodb";
 import path from "path";
-import express from "express";
+import { LineItem, LineItemGrade } from "../lti";
+import { Result } from "../utils";
 
 /* 
 
@@ -134,3 +136,47 @@ lti.setup(
     // devMode: true, // Set DevMode to true if the testing platform is in a different domain and https is not being used
   }
 );
+
+export const createLineItem = async (
+  idToken: ltijs.IdToken,
+  lineItem: Omit<LineItem, "id">
+): Promise<Result<string, LineItem>> => {
+  // example use: https://gist.github.com/Cvmcosta/2a503dd3df6905cd635d26d188f99c13
+  // @ts-ignore
+  const created = await lti.Grade.createLineItem(idToken, lineItem);
+
+  const parsed = LineItem.safeParse(created);
+
+  if (!parsed.success) {
+    return ["err", "failed to parse line item"];
+  }
+
+  return ["ok", parsed.data];
+};
+
+export const submitScore = async ({
+  idToken,
+  grade,
+  lineItemId,
+}: {
+  idToken: ltijs.IdToken;
+  lineItemId: string;
+  grade: LineItemGrade;
+}): Promise<Result<string, LineItemGrade>> => {
+  try {
+    // example: https://gist.github.com/Cvmcosta/2a503dd3df6905cd635d26d188f99c13
+    // @ts-ignore
+    const submitted = await lti.Grade.submitScore(idToken, lineItemId, grade);
+
+    const parsed = LineItemGrade.safeParse(submitted);
+
+    if (!parsed.success) {
+      return ["err", "failed to parse grade"];
+    }
+
+    return ["ok", parsed.data];
+  } catch (error) {
+    console.error(error);
+    return ["err", String(error)];
+  }
+};

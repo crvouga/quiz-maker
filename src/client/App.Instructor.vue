@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { LMS_Context } from "../lti";
+import { LTI_Context } from "../lti";
 import { LaunchMode } from "./API_LMS";
 import AppInstructorDefault from "./App.Instructor.Default.vue";
 import AppInstructorQuiz from "./App.Instructor.Quiz.vue";
 
-defineProps<{ context: LMS_Context; launchMode: LaunchMode }>();
+defineProps<{ context: LTI_Context; launchMode: LaunchMode }>();
 </script>
 
 <template>
@@ -16,5 +16,6 @@ defineProps<{ context: LMS_Context; launchMode: LaunchMode }>();
     :launch-mode="launchMode" />
   <AppInstructorQuiz
     v-if="context.custom.type === 'quiz'"
-    :quiz-id="context.custom.quizId" />
+    :quiz-id="context.custom.quizId"
+    :context="context" />
 </template>

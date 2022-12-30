@@ -1,65 +1,8 @@
 import express from "express";
 import { lti } from "./shared";
-import { CustomContext } from "../lti";
+import { CustomContext, LTI_Context } from "../lti";
 
 export const useAPI_LMS = (app: express.Application) => {
-  /* 
-  
-  
- 
- 
-  */
-
-  app.post("/grade", async (req, res) => {
-    try {
-      const idToken: any = res.locals.token; // IdToken
-      const score = req.body.grade; // User numeric score sent in the body
-      // Creating Grade object
-      const gradeObj = {
-        userId: idToken.user,
-        scoreGiven: score,
-        scoreMaximum: 100,
-        activityProgress: "Completed",
-        gradingProgress: "FullyGraded",
-      };
-
-      // Selecting linetItem ID
-      let lineItemId = idToken.platformContext.endpoint.lineitem; // Attempting to retrieve it from idtoken
-      if (!lineItemId) {
-        // @ts-ignore
-        const response = await lti.Grade.getLineItems(idToken, {
-          resourceLinkId: true,
-        });
-        const lineItems = response.lineItems;
-        if (lineItems.length === 0) {
-          // Creating line item if there is none
-          console.log("Creating new line item");
-          const newLineItem = {
-            scoreMaximum: 100,
-            label: "Grade",
-            tag: "grade",
-            resourceLinkId: idToken.platformContext.resource.id,
-          };
-          //   @ts-ignore
-          const lineItem = await lti.Grade.createLineItem(idToken, newLineItem);
-          lineItemId = lineItem.id;
-        } else lineItemId = lineItems[0].id;
-      }
-
-      // Sending Grade
-      //   @ts-ignore
-      const responseGrade = await lti.Grade.submitScore(
-        idToken,
-        lineItemId,
-        gradeObj
-      );
-      return res.send(responseGrade);
-    } catch (err) {
-      console.log(err);
-      return res.status(500).send({ err: String(err) });
-    }
-  });
-
   /* 
   
   
@@ -71,10 +14,11 @@ export const useAPI_LMS = (app: express.Application) => {
     try {
       const token = res.locals.token;
       const result = await lti.NamesAndRoles.getMembers(token);
-      if (result) return res.send(result.members);
+      if (result) {
+        return res.send(result.members);
+      }
       return res.sendStatus(500);
     } catch (err) {
-      console.log(err);
       return res.status(500).send(String(err));
     }
   });
@@ -89,14 +33,20 @@ export const useAPI_LMS = (app: express.Application) => {
   app.get("/context", async (req, res) => {
     const token = res.locals.token;
     const context: any = res.locals.context;
-    const payload: any = {
-      ...context.context,
+
+    const lmsContext: LTI_Context = {
+      id: context?.context?.id,
+      label: context?.context?.label,
+      title: context?.context?.title,
+      type: context?.context?.type ?? [],
       roles: context?.roles,
       userName: token?.userInfo?.name,
       userEmail: token?.userInfo?.email,
       custom: toCustomContext(context?.custom),
+      lineItemId: token?.platformContext?.endpoint?.lineitem,
     };
-    return res.send(payload);
+
+    return res.send({ ...lmsContext, locals: res.locals });
   });
 
   const toCustomContext = (context: unknown): CustomContext => {

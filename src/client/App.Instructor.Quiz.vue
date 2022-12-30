@@ -3,9 +3,11 @@ import { onMounted, ref } from "vue";
 import QuizVue from "./Quiz.vue";
 import { API_Quiz } from "./API_Quiz";
 import { Quiz } from "../quiz";
+import { LTI_Context } from "../lti";
 
 const props = defineProps<{
   quizId: string;
+  context: LTI_Context;
 }>();
 
 type QuizState = ["loading"] | ["err", string] | ["ok", Quiz];
@@ -34,5 +36,5 @@ onMounted(() => {
     Failed to load quiz.
     {{ state[1] }}
   </div>
-  <QuizVue v-if="state[0] === 'ok'" :quiz="state[1]" />
+  <QuizVue :context="context" v-if="state[0] === 'ok'" :quiz="state[1]" />
 </template>

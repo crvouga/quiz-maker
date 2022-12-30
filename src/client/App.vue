@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import { LMS_Context, toRole } from "../lti";
+import { LTI_Context, toRole } from "../lti";
 import AppInstructor from "./App.Instructor.vue";
 import AppStudent from "./App.Student.vue";
 import { API_LMS, LaunchMode } from "./API_LMS";
 
-const context = ref<LMS_Context | null>(null);
+const context = ref<LTI_Context | null>(null);
 
 onMounted(async () => {
   const got = await API_LMS.getContext();
