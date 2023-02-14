@@ -6,7 +6,7 @@ import path from "path";
 import { LineItem, LineItemGrade } from "../lti";
 import { Result } from "../utils";
 
-/* 
+/*
 
 
 Env Vars
@@ -17,7 +17,7 @@ This is all the required env vars for the server to run
 */
 
 dotenv.config({
-  path: path.join(__dirname, "../../.env.server"),
+  path: path.join(__dirname, "../../.env"),
 });
 
 const MONGOHOST = process.env["MONGOHOST"];
@@ -65,7 +65,7 @@ export const envVars = {
   PORT,
 };
 
-/* 
+/*
 
 
 MongoDB Instance
@@ -88,7 +88,7 @@ client.on("close", () => {
 
 export const db = client.db("learning-tool");
 
-/* 
+/*
 
 
 Client Side App HTML
@@ -102,7 +102,7 @@ export const sendClientHTML = (res: express.Response) => {
   return res.sendFile(path.join(clientAppHTML_Path, "index.html"));
 };
 
-/* 
+/*
 
 
 LTI Instance
@@ -154,7 +154,7 @@ export const createLineItem = async (
   return ["ok", parsed.data];
 };
 
-/* 
+/*
 
 
 
