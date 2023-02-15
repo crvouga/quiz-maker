@@ -2,7 +2,7 @@ import { useAPI_LMS } from "./API_LMS";
 import { useAPI_Quiz } from "./API_Quiz";
 import { envVars, lti, sendClientHTML } from "./shared";
 
-/* 
+/*
 
 lti.onConnect fires when the LMS launches our app
 so we'll send the client html app that will run inside of the LMS
@@ -14,8 +14,8 @@ lti.onConnect((token, req, res) => {
   return;
 });
 
-/* 
-  
+/*
+
 lti.onDeepLinking fires when the LMS launches our app for select specific content
 so we'll send the client html app but with the /deeplink route so the client app knows
 that it should render the deep linking view
@@ -31,7 +31,7 @@ lti.app.get("/deeplink", async (req, res) => {
   return;
 });
 
-/* 
+/*
 
 Hook up the API routes that our client app will consume
 
@@ -44,17 +44,17 @@ useAPI_LMS(lti.app);
 //   sendClientHTML(res);
 // });
 
-/* 
-  
- 
- 
-  
+/*
+
+
+
+
 */
 
 const startServer = async () => {
   await lti.deploy({ port: Number(envVars.PORT) });
 
-  /* 
+  /*
 
 
   This is where we hook up platforms like Moodle, Canvas, Blackboard, etc.
@@ -73,6 +73,34 @@ const startServer = async () => {
       key: "http://localhost:8888/moodle/mod/lti/certs.php",
     },
   });
+  console.log("registered moodle");
+
+  await lti.registerPlatform({
+    url: "https://canvas.instructure.com",
+    name: "Canvas Docker",
+    clientId: "10000000000007",
+    authenticationEndpoint: "http://canvas.docker/api/lti/authorize",
+    accesstokenEndpoint: "http://canvas.docker/login/oauth2/token",
+    authConfig: {
+      method: "JWK_SET",
+      key: "http://canvas.docker/api/lti/security/jwks",
+    },
+  });
+  console.log("registered canvas docker");
+
+  // await lti.registerPlatform({
+  //   url: "https://canvas.instructure.com",
+  //   name: "Canvas ASU Dev",
+  //   clientId: "10000000000007",
+  //   authenticationEndpoint:
+  //     "https://asu-dev.instructure.com//api/lti/authorize",
+  //   accesstokenEndpoint: "https://asu-dev.instructure.com/login/oauth2/token",
+  //   authConfig: {
+  //     method: "JWK_SET",
+  //     key: "https://asu-dev.instructure.com/api/lti/security/jwks",
+  //   },
+  // });
+  // console.log("registered canvas asu dev");
 };
 
 startServer();

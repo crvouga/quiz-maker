@@ -17,10 +17,10 @@ export const useAPI_Quiz = async (app: express.Application) => {
   // database stuff for full text search questions
   await questionCol.createIndex({ question: "text" });
 
-  /* 
-  
-  
-  
+  /*
+
+
+
   */
 
   app.post("/quiz", async (req, res) => {
@@ -40,12 +40,12 @@ export const useAPI_Quiz = async (app: express.Application) => {
     return res.status(201).send({ message: "Quiz created" }).end();
   });
 
-  /* 
-  
-  
+  /*
 
-  
-  
+
+
+
+
   */
 
   app.post("/quiz-submission", async (req, res) => {
@@ -59,11 +59,11 @@ export const useAPI_Quiz = async (app: express.Application) => {
 
     const idToken = res.locals.token;
 
-    // const lineItemId = idToken.platformContext.endpoint.lineitem;
-    // if (typeof lineItemId !== "string") {
-    //   res.status(500).send({ message: "no line item id" }).end();
-    //   return;
-    // }
+    const lineItemId = idToken?.platformContext?.endpoint?.lineitem;
+    if (typeof lineItemId !== "string") {
+      res.status(500).send({ message: "no line item id" }).end();
+      return;
+    }
 
     const created = await createLineItem(idToken, {
       label: "Grade",
@@ -101,12 +101,12 @@ export const useAPI_Quiz = async (app: express.Application) => {
     return;
   });
 
-  /* 
-  
-  
+  /*
+
+
   docs: https://cvmcosta.me/ltijs/#/deeplinking
-  
-  
+
+
   */
   app.post("/quiz/deep-link", async (req, res) => {
     const parsed = Quiz.safeParse(req.body);
@@ -140,10 +140,10 @@ export const useAPI_Quiz = async (app: express.Application) => {
     });
   });
 
-  /* 
-  
-  
-  
+  /*
+
+
+
 
   */
 
@@ -152,11 +152,11 @@ export const useAPI_Quiz = async (app: express.Application) => {
     return res.status(200).send(quizzes).end();
   });
 
-  /* 
-  
-  
- 
- 
+  /*
+
+
+
+
   */
 
   app.get("/quiz/:quizId", async (req, res) => {
@@ -171,11 +171,11 @@ export const useAPI_Quiz = async (app: express.Application) => {
     return res.status(200).json(found).end();
   });
 
-  /* 
-  
-  
- 
- 
+  /*
+
+
+
+
   */
 
   app.post("/quiz-question", async (req, res) => {
@@ -195,11 +195,11 @@ export const useAPI_Quiz = async (app: express.Application) => {
     return;
   });
 
-  /* 
-  
-  
- 
- 
+  /*
+
+
+
+
   */
 
   app.delete("/quiz-question/:id", async (req, res) => {
@@ -208,11 +208,11 @@ export const useAPI_Quiz = async (app: express.Application) => {
     res.status(201).send({ message: "Quiz question created" }).end();
   });
 
-  /* 
-  
-  
- 
- 
+  /*
+
+
+
+
   */
 
   app.post("/quiz-question-search", async (req, res) => {
@@ -223,9 +223,9 @@ export const useAPI_Quiz = async (app: express.Application) => {
     res.status(200).send(hits).end();
   });
 
-  /* 
-  
-  
+  /*
+
+
   */
 
   app.post("/quiz-seed", async (req, res) => {
