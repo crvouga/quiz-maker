@@ -45,14 +45,16 @@ onMounted(async () => {
 //
 //
 //
-
+const deepLinking = ref<string | null>(null);
 const onCreated = async (quiz: Quiz) => {
   pushScreen("home");
   await fetchQuizzes();
 };
 
 const deepLinkQuiz = async (quiz: Quiz) => {
+  deepLinking.value = quiz.id;
   await API_Quiz.deepLink(quiz);
+  // deepLinking.value = null;
 };
 
 const seeding = ref(false);
@@ -105,6 +107,7 @@ const seedDatabase = async () => {
       <button
         v-if="launchMode === 'DeepLinking'"
         class="btn btn-primary"
+        :class="{ loading: deepLinking === quiz.id }"
         @click="deepLinkQuiz(quiz)">
         Deep Link
       </button>

@@ -75,6 +75,12 @@ const startServer = async () => {
   });
   console.log("registered moodle");
 
+  //
+  //
+  //
+  //
+  //
+
   await lti.registerPlatform({
     url: "https://canvas.instructure.com",
     name: "Canvas Docker",
@@ -86,12 +92,12 @@ const startServer = async () => {
       key: "http://canvas.docker/api/lti/security/jwks",
     },
   });
-  console.log("registered canvas docker");
+  console.log("registered canvas.docker");
 
   // await lti.registerPlatform({
   //   url: "https://canvas.instructure.com",
   //   name: "Canvas ASU Dev",
-  //   clientId: "10000000000007",
+  //   clientId: "127470000000000262",
   //   authenticationEndpoint:
   //     "https://asu-dev.instructure.com//api/lti/authorize",
   //   accesstokenEndpoint: "https://asu-dev.instructure.com/login/oauth2/token",
@@ -100,7 +106,20 @@ const startServer = async () => {
   //     key: "https://asu-dev.instructure.com/api/lti/security/jwks",
   //   },
   // });
-  // console.log("registered canvas asu dev");
+  // console.log("registered asu-dev.instructure.com");
+
+  // await lti.registerPlatform({
+  //   url: "https://canvas.instructure.com",
+  //   name: "Canvas ASU Dev",
+  //   clientId: "127470000000000262",
+  //   authenticationEndpoint: "https://canvas-dev.asu.edu/api/lti/authorize",
+  //   accesstokenEndpoint: "https://canvas-dev.asu.edu/login/oauth2/token",
+  //   authConfig: {
+  //     method: "JWK_SET",
+  //     key: "https://canvas-dev.asu.edu/api/lti/security/jwks",
+  //   },
+  // });
+  // console.log("registered https://canvas-dev.asu.edu");
 };
 
 startServer();
