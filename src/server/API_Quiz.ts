@@ -129,14 +129,21 @@ export const useAPI_Quiz = async (app: express.Application) => {
       },
     ];
 
-    const deepLinkingFormHTML = await lti.DeepLinking.createDeepLinkingForm(
-      res.locals.token,
-      items,
-      { message: "Successfully registered quiz!" }
+    const deepLinkingFormHTML: string | false =
+      await lti.DeepLinking.createDeepLinkingForm(res.locals.token, items, {
+        message: "Successfully registered quiz!",
+      });
+
+    // NOTE
+    // global_includes=0 is a hack for asu canvas dev to prevent it from including asu specific code
+    // this problem the wrong place to include though
+    const _withCustomQueryParam = (deepLinkingFormHTML || "").replace(
+      "deep_linking_response?",
+      "deep_linking_response?global_includes=0&"
     );
 
     return res.status(200).json({
-      deepLinkingFormHTML,
+      deepLinkingFormHTML: deepLinkingFormHTML,
     });
   });
 
