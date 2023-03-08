@@ -65,6 +65,10 @@ export const useAPI_Quiz = async (app: express.Application) => {
       return;
     }
 
+    // TODO:
+    // we shouldn't create a new line item
+    // the LMS usually creates a line item associated with the assignment
+    // this will create junk entries into the LMS gradebook
     const created = await createLineItem(idToken, {
       label: "Grade",
       resourceId: parsed.data.quiz.id,

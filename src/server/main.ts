@@ -75,32 +75,32 @@ const startServer = async () => {
   // });
   // console.log("registered moodle");
 
-  // await lti.registerPlatform({
-  //   url: "https://canvas.instructure.com",
-  //   name: "Canvas Docker",
-  //   clientId: "10000000000007",
-  //   authenticationEndpoint: "http://canvas.docker/api/lti/authorize",
-  //   accesstokenEndpoint: "http://canvas.docker/login/oauth2/token",
-  //   authConfig: {
-  //     method: "JWK_SET",
-  //     key: "http://canvas.docker/api/lti/security/jwks",
-  //   },
-  // });
-  // console.log("registered canvas.docker");
-
   await lti.registerPlatform({
     url: "https://canvas.instructure.com",
-    name: "Canvas ASU Dev",
-    clientId: "127470000000000262",
-    authenticationEndpoint:
-      "https://asu-dev.instructure.com//api/lti/authorize",
-    accesstokenEndpoint: "https://asu-dev.instructure.com/login/oauth2/token",
+    name: "Canvas Docker",
+    clientId: "10000000000007",
+    authenticationEndpoint: "http://canvas.docker/api/lti/authorize",
+    accesstokenEndpoint: "http://canvas.docker/login/oauth2/token",
     authConfig: {
       method: "JWK_SET",
-      key: "https://asu-dev.instructure.com/api/lti/security/jwks",
+      key: "http://canvas.docker/api/lti/security/jwks",
     },
   });
-  console.log("registered asu-dev.instructure.com");
+  console.log("registered canvas.docker");
+
+  // await lti.registerPlatform({
+  //   url: "https://canvas.instructure.com",
+  //   name: "Canvas ASU Dev",
+  //   clientId: "127470000000000262",
+  //   authenticationEndpoint:
+  //     "https://asu-dev.instructure.com//api/lti/authorize",
+  //   accesstokenEndpoint: "https://asu-dev.instructure.com/login/oauth2/token",
+  //   authConfig: {
+  //     method: "JWK_SET",
+  //     key: "https://asu-dev.instructure.com/api/lti/security/jwks",
+  //   },
+  // });
+  // console.log("registered asu-dev.instructure.com");
 
   // await lti.registerPlatform({
   //   url: "https://canvas.instructure.com",
